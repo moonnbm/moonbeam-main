@@ -1,0 +1,20 @@
+{
+  "name": "moonbeam-main",
+  "version": "1.0.0",
+  "description": "This is the main repository for the Moonbeam mobile application.",
+  "main": "index.js",
+  "repository": "https://github.com/moonnbm/moonbeam-main",
+  "author": "Marius Acsinte <marius@moonbeam.vet>",
+  "license": "Moonbeam Inc. Proprietary Code License <https://github.com/moonnbm/moonbeam-main/blob/main/LICENSE>",
+  "private": true,
+  "scripts": {
+    "postinstall": "husky install"
+  },
+  "devDependencies": {
+    "husky": "^8.0.3",
+    "lerna": "^6.4.1"
+  },
+  "workspaces": [
+    "packages/*"
+  ]
+}
