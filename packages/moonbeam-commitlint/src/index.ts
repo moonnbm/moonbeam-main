@@ -18,6 +18,9 @@ export const setCommitLintConfig = (
             '@commitlint/config-conventional',
             '@commitlint/config-lerna-scopes'
         ],
+        /**
+         * Any rules defined below here will override rules from @commitlint/config-conventional
+         */
         rules: {
             'body-empty': [1, 'never'],
             'body-case': [2, 'always', ['sentence-case']],

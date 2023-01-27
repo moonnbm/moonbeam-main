@@ -16,22 +16,28 @@
 . "$(dirname "$0")/_/husky.sh"
 npx --no -- commitlint --edit $1 || (echo "Commitlint failed, expected format is:
 #######################################################################################
-<type>[mandatory scope]: <description>
+#######################################################################################
+<type>(scope): #<issue_number> - <subject - max length 72 characters>
+# Example:
+# feat(moonbeam-commitlint): this is a super cool commit message
 
-[optional body]
+[body - max length 500 characters]
+# Example:
+# Very nicely written commit message body!
 
-[optional footer(s)]
+<footer with ticket references>
+# Example:
+# MOONBM-123
 
-# Example 1:
-#
 ########################################################################################
-# <ticket>:          needs to start with one of: ['MOONBM-']
-# <scopes>:          representing the sub-package/package in the scope of the commit. There can be  1 to many scopes, which must
-#                    be separated by a comma (,) - in case multiple items are passed in (with NO SPACES in BETWEEN).
-#                    can be one of: [<{sub_package_name_auto_generated}>, <{mono_repo_name_auto_generated}>]
-# <subject>:         representing the commit message of your commit. Free-form, no restrictions here, other than the size being a max of 72 characters.
-# <>:                means REQUIRED, will always need to get replaced by some content
+# types:             ['feat', 'fix', 'docs', 'style', 'refactor', 'test', 'revert']
+# scope:             ['name of mono repo', 'name of sub-package within /packages/ directory']
+# ticket references: ['MOONBM-']
+# '<>':              means REQUIRED, will always need to get replaced by some content
+# '[]':              means OPTIONAL, will sometimes need to get replaced by some content
 #
 # For more information on what committing standards we use, refer to: https://www.conventionalcommits.org/en/v1.0.0/#specification
 # For more information on how we enforce these rules, refer to: https://github.com/moonnbm/moonbeam-main/tree/main/packages/moonbeam-commitlint
+#######################################################################################
+#######################################################################################
 " && (exit 1))
