@@ -13,9 +13,7 @@ export default function App() {
     }
     prepare()
   }, [])
-
-  console.log('this is a super cool logging message');
-
+  
   return (
     <View style={styles.container}>
       <Text>Open up App.tsx to start working on your app!</Text>
