@@ -1,0 +1,32 @@
+{
+  "name": "@moonbeam/moonbeam-app",
+  "version": "1.0.0",
+  "description": "This sub-package represents the library used to expose Moonbeam's Typescript configuration.",
+  "repository": "https://github.com/moonnbm/moonbeam-main/tree/main/packages/moonbeam-app",
+  "author": "Marius Acsinte <marius@moonbeam.vet>",
+  "license": "Moonbeam Inc. Proprietary Code License <https://github.com/moonnbm/moonbeam-main/blob/main/LICENSE>",
+  "main": "node_modules/expo/AppEntry.js",
+  "scripts": {
+    "android": "expo start --android",
+    "clean": "rm -rf node_modules",
+    "ios": "expo start --ios",
+    "start": "expo start",
+    "web": "expo start --web"
+  },
+  "dependencies": {
+    "expo": "~47.0.12",
+    "expo-splash-screen": "^0.17.5",
+    "expo-status-bar": "~1.4.2",
+    "react": "18.1.0",
+    "react-dom": "18.1.0",
+    "react-native": "0.70.5",
+    "react-native-web": "~0.18.9"
+  },
+  "devDependencies": {
+    "@babel/core": "^7.12.9",
+    "@types/react": "~18.0.14",
+    "@types/react-native": "~0.70.6",
+    "typescript": "^4.6.3"
+  },
+  "private": true
+}

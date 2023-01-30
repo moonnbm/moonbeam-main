@@ -8,6 +8,7 @@
   "license": "Moonbeam Inc. Proprietary Code License <https://github.com/moonnbm/moonbeam-main/blob/main/LICENSE>",
   "private": true,
   "scripts": {
+    "clean": "rm -rf node_modules && lerna run clean",
     "postinstall": "husky install"
   },
   "devDependencies": {
@@ -15,7 +16,13 @@
     "lerna": "^6.4.1",
     "typescript": "^4.9.4"
   },
-  "workspaces": [
-    "packages/*"
-  ]
+  "workspaces": {
+    "packages": [
+      "packages/*"
+    ],
+    "nohoist": [
+      "**/moonbeam-app",
+      "**/moonbeam-app/**"
+    ]
+  }
 }
