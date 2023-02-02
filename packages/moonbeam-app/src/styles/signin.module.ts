@@ -1,6 +1,7 @@
 import {StyleSheet} from "react-native";
 
-const styles = StyleSheet.create({
+// styles to be used within the SignIn component
+export const styles = StyleSheet.create({
     container: {
         marginTop: '5%',
         alignItems: 'center'
@@ -12,46 +13,59 @@ const styles = StyleSheet.create({
     textInput: {
         marginTop: 50,
         width: 350,
-        backgroundColor: 'gray'
+        backgroundColor: '#f2f2f2',
+        shadowColor: '#313030',
+        shadowOffset: {width: -2, height: 10},
+        shadowOpacity: 0.3,
+        shadowRadius: 10,
+        elevation: 15
     },
     textInputFocus: {
         marginTop: 50,
         width: 350,
-        backgroundColor: 'gray'
+        backgroundColor: '#f2',
+        shadowColor: '#313030',
+        shadowOffset: {width: -2, height: 10},
+        shadowOpacity: 0.3,
+        shadowRadius: 10,
+        elevation: 15
     },
     loginTitle: {
-        marginTop: '10%',
+        marginRight: '43%',
+        marginTop: '25%',
         fontFamily: 'Raleway-Medium',
-        fontSize: 60,
-        color: '#F2FF5D',
+        fontSize: 80,
+        color: 'black',
     },
     loginSubtitle: {
-        fontFamily: 'Raleway-Regular',
-        fontSize: 30,
-        color: 'white'
+        marginRight: '22%',
+        fontFamily: 'Raleway-Medium',
+        fontSize: 25,
+        color: 'black'
     },
     loginFooter: {
         fontFamily: 'Raleway-Regular',
         fontSize: 20,
-        color: 'white'
+        color: '#313030'
+    },
+    forgotPasswordButton: {
+        marginTop: '5%',
+        marginLeft: '55%',
+        fontFamily: 'Raleway-Bold',
+        fontSize: 16,
+        color: '#313030',
+        textDecorationLine: 'underline'
     },
     loginFooterButton: {
-        fontFamily: 'Raleway-Regular',
+        fontFamily: 'Raleway-Bold',
         fontSize: 20,
-        color: '#F2FF5D',
+        color: '#2A3779',
     },
-    loginFooterButtonPressed: {
-        fontFamily: 'Raleway-Regular',
-        fontSize: 20,
-        color: '#F2FF5D',
-        backgroundColor: '#313030'
-    },
-    signInFooterButon: {
-        height: 40,
-        width: '40%',
-        position: 'relative',
+    signInFooterButton: {
+        borderRadius: 25,
+        borderColor: '#313030',
+        height: 50,
+        width: '50%',
         marginTop: '10%'
     }
 });
-
-export default styles;

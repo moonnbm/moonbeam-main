@@ -1,11 +1,13 @@
 import React, {useCallback, useEffect, useState} from 'react';
 import * as SplashScreen from 'expo-splash-screen';
-import {ImageBackground, SafeAreaView} from 'react-native';
-import SignInComponent from './src/components/SignIn'
-import styles from './src/styles/main.module'
+import {SignInComponent} from './src/components/SignIn'
+import {SignUpComponent} from './src/components/SignUp'
 import * as Font from 'expo-font';
 import {Provider as PaperProvider} from 'react-native-paper';
 import {theme} from './src/utils/Theme';
+import {NavigationContainer} from '@react-navigation/native';
+import {createNativeStackNavigator} from '@react-navigation/native-stack';
+import {RootStackParamList} from './src/models/PageProps';
 
 // keep the splash screen visible while we fetch resources
 SplashScreen.preventAutoHideAsync();
@@ -60,11 +62,11 @@ export default function App() {
     }, []);
 
     /**
-     *
+     * Invoked when the application is mounted and the layout changes
      */
     const onLayoutRootView = useCallback(async () => {
         if (appIsReady) {
-            // Artificially delay for 1 seconds to simulate loading experience.
+            // artificially delay for 1 seconds to simulate loading experience.
             await new Promise(resolve => setTimeout(resolve, 1000));
             await SplashScreen.hideAsync();
         }
@@ -73,21 +75,34 @@ export default function App() {
     if (!appIsReady) {
         return null;
     } else {
+        // create a native stack navigator, to be used for our application navigation
+        const Stack = createNativeStackNavigator<RootStackParamList>();
+
         // return the component for the application
         return (
             <PaperProvider theme={theme}>
-                <ImageBackground
-                    style={styles.image}
-                    source={require('./assets/app-background.png')}>
-                    <SafeAreaView
-                        onLayout={onLayoutRootView}
-                        style={styles.container}>
-                        <SignInComponent>
-                        </SignInComponent>
-                    </SafeAreaView>
-                </ImageBackground>
+                <NavigationContainer>
+                    <Stack.Navigator>
+                        <Stack.Screen
+                            name="SignIn"
+                            component={SignInComponent}
+                            options={{headerShown: false}}
+                            initialParams={{onLayoutRootView: onLayoutRootView}}
+                        />
+                        <Stack.Screen
+                            name="SignUp"
+                            component={SignUpComponent}
+                            options={{
+                                headerTransparent: true,
+                                title: '',
+                                headerBackTitleVisible: false,
+                                headerTintColor: '#2A3779'
+                            }}
+                            initialParams={{}}
+                        />
+                    </Stack.Navigator>
+                </NavigationContainer>
             </PaperProvider>
         );
     }
 }
-

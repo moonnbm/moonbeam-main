@@ -1,6 +1,7 @@
 import { StyleSheet } from "react-native";
 
-const styles = StyleSheet.create({
+// styles to be used within all components
+export const commonStyles = StyleSheet.create({
     container: {
         flex: 1,
         width: '100%',
@@ -13,5 +14,3 @@ const styles = StyleSheet.create({
         justifyContent: 'center',
     },
 });
-
-export default styles;
