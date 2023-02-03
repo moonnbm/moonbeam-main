@@ -2,21 +2,16 @@ import {StyleSheet} from "react-native";
 
 // styles to be used within the SignUp component
 export const styles = StyleSheet.create({
-    container: {
-        alignItems: 'center'
-    },
     signupTitle: {
-        marginTop: '98%',
-        marginRight: '30%',
         fontFamily: 'Raleway-Medium',
-        fontSize: 55,
+        fontSize: 39,
         color: 'black',
     },
     signupSubtitle: {
-        marginRight: '13%',
+        marginTop: '1%',
         fontFamily: 'Raleway-Medium',
-        fontSize: 25,
-        color: 'black',
+        fontSize: 22,
+        color: '#A2B000',
         width: 300
     },
     initialTextInput: {
@@ -62,6 +57,9 @@ export const styles = StyleSheet.create({
     initialNextBtnStyle: {
         paddingRight: 90
     },
+    lastPrevBtnStyle: {
+        paddingLeft: 90
+    },
     nextBtnStyle: {},
     prevBtnStyle: {},
     btnStyleText: {
@@ -77,7 +75,7 @@ export const styles = StyleSheet.create({
         color: '#2A3779',
     },
     militaryProgressTitle: {
-        marginLeft: '15%',
+        marginLeft: '19%',
         marginTop: '5%',
         fontFamily: 'Raleway-Regular',
         fontSize: 25,
@@ -92,10 +90,10 @@ export const styles = StyleSheet.create({
     },
     initialDropdownPicker: {
         marginTop: 10,
-        width: 330,
+        width: 350,
         height: 70,
-        backgroundColor: "#f2f2f2",
-        borderColor: "#f2f2f2",
+        backgroundColor: '#f2f2f2',
+        borderColor: '#f2f2f2',
         shadowColor: '#313030',
         shadowOffset: {width: -2, height: 5},
         shadowOpacity: 0.3,
@@ -106,8 +104,8 @@ export const styles = StyleSheet.create({
         marginTop: 30,
         width: 330,
         height: 70,
-        backgroundColor: "#f2f2f2",
-        borderColor: "#f2f2f2",
+        backgroundColor: '#f2f2f2',
+        borderColor: '#f2f2f2',
         shadowColor: '#313030',
         shadowOffset: {width: -2, height: 5},
         shadowOpacity: 0.3,
@@ -117,5 +115,27 @@ export const styles = StyleSheet.create({
     dropdownContainer: {
         backgroundColor: "#f2f2f2",
         borderColor: "lightgrey"
+    },
+    signUpView: {
+        marginBottom: '10%'
+    },
+    signUpFooterButton: {
+        borderRadius: 25,
+        borderColor: '#313030',
+        height: 50,
+        width: 350
+    },
+    disclaimerText: {
+        fontFamily: 'Raleway-Medium',
+        color: '#313030',
+        fontSize: 13,
+        width: 350,
+        marginTop: '3%',
+        textAlign: 'center'
+    },
+    termsFooter: {
+        fontFamily: 'Raleway-Bold',
+        fontSize: 13,
+        color: '#2A3779'
     }
 });

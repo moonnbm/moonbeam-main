@@ -1,11 +1,10 @@
 import React, {useEffect, useState} from 'react';
-import {Image, ImageBackground, Text, View} from 'react-native';
+import {Image, ImageBackground, KeyboardAvoidingView, Text, View} from 'react-native';
 import {Button, TextInput} from 'react-native-paper';
 import {styles} from '../styles/signin.module';
 // @ts-ignore
 import LoginLogo from '../../assets/login-logo.png';
 import {SignInProps} from '../models/PageProps'
-import {SafeAreaView} from 'react-native-safe-area-context';
 import {commonStyles} from '../styles/common.module';
 
 /**
@@ -15,6 +14,7 @@ export const SignInComponent = ({navigation, route}: SignInProps) => {
     // state driven key-value pairs
     const [usernameFocus, setIsUsernameFocus] = useState<boolean>(false);
     const [passwordFocus, setIsPasswordFocus] = useState<boolean>(false);
+    // const [isKeyboardVisible, setKeyboardVisible] = useState(false);
 
     /**
      * Entrypoint UseEffect will be used as a block of code where we perform specific tasks (such as
@@ -24,55 +24,79 @@ export const SignInComponent = ({navigation, route}: SignInProps) => {
      * included in here.
      */
     useEffect(() => {
-
+        // const keyboardDidShowListener = Keyboard.addListener(
+        //     'keyboardDidShow',
+        //     () => {
+        //         setKeyboardVisible(true); // or some other action
+        //     }
+        // );
+        // const keyboardDidHideListener = Keyboard.addListener(
+        //     'keyboardDidHide',
+        //     () => {
+        //         setKeyboardVisible(false); // or some other action
+        //     }
+        // );
+        //
+        // return () => {
+        //     keyboardDidHideListener.remove();
+        //     keyboardDidShowListener.remove();
+        // };
     }, [])
 
     // return the component for the application
     return (
         <ImageBackground
             style={commonStyles.image}
+            imageStyle={{
+                resizeMode: 'contain'
+            }}
             source={require('../../assets/login-background.png')}>
-            <SafeAreaView
+            <KeyboardAvoidingView
+                behavior="height"
                 onLayout={route.params.onLayoutRootView}
                 style={commonStyles.container}>
-                <View>
-                    <View style={styles.container}>
+                <View style={styles.mainView}>
+                    <View>
                         <Text style={styles.loginTitle}>Hello</Text>
                         <Text style={styles.loginSubtitle}>Sign in to your account</Text>
-                        <TextInput
-                            style={usernameFocus ? styles.textInputFocus : styles.textInput}
-                            onFocus={() => {
-                                setIsUsernameFocus(true);
-                            }}
-                            label="Email"
-                            textColor={"#313030"}
-                            underlineColor={"white"}
-                            activeUnderlineColor={"#313030"}
-                        />
-                        <TextInput
-                            style={passwordFocus ? styles.textInputFocus : styles.textInput}
-                            onFocus={() => {
-                                setIsPasswordFocus(true);
-                            }}
-                            label="Password"
-                            secureTextEntry
-                            textColor={"#313030"}
-                            underlineColor={"white"}
-                            activeUnderlineColor={"#313030"}
-                            right={<TextInput.Icon icon="eye" iconColor="#313030"/>}
-                        />
+                    </View>
+                    <TextInput
+                        style={usernameFocus ? styles.textInputFocus : styles.textInput}
+                        onFocus={() => {
+                            setIsUsernameFocus(true);
+                        }}
+                        label="Email"
+                        textColor={"#313030"}
+                        underlineColor={"#f2f2f2"}
+                        activeUnderlineColor={"#313030"}
+                    />
+                    <TextInput
+                        style={passwordFocus ? styles.textInputFocus : styles.textInput}
+                        onFocus={() => {
+                            setIsPasswordFocus(true);
+                        }}
+                        label="Password"
+                        secureTextEntry
+                        textColor={"#313030"}
+                        underlineColor={"#f2f2f2"}
+                        activeUnderlineColor={"#313030"}
+                        right={<TextInput.Icon icon="eye" iconColor="#313030"/>}
+                    />
+                    <View style={styles.forgotPasswordView}>
                         <Text style={styles.forgotPasswordButton}
                               onPress={() => {
                               }}>Forgot Password ?
                         </Text>
-                        <Button
-                            style={styles.signInFooterButton}
-                            textColor={"#313030"}
-                            mode="outlined"
-                            icon={"arrow-right-top"}
-                            labelStyle={{fontSize: 18}}>
-                            Log in
-                        </Button>
+                    </View>
+                    <Button
+                        style={styles.signInFooterButton}
+                        textColor={"#f2f2f2"}
+                        buttonColor={"#2A3779"}
+                        mode="outlined"
+                        labelStyle={{fontSize: 18}}>
+                        Log in
+                    </Button>
+                    <View style={styles.bottomView}>
                         <Image source={LoginLogo} style={styles.loginLogo}/>
                         <Text style={styles.loginFooter}>Don't have an account ?
                             <Text style={styles.loginFooterButton}
@@ -82,7 +106,7 @@ export const SignInComponent = ({navigation, route}: SignInProps) => {
                         </Text>
                     </View>
                 </View>
-            </SafeAreaView>
+            </KeyboardAvoidingView>
         </ImageBackground>
     );
 };

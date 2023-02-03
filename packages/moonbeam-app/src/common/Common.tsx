@@ -1,67 +1,34 @@
-import { Image } from "react-native"
-
-// Ranks to be exported for SignUp component dropdown
-export const ranksDropdownItems = [
-    {
-        label: 'Current/Former Rank',
-        value: 'Current/Former Rank',
-        icon: () => <Image source={require('../../assets/favicon.png')}/>,
-        disabled: true
-    },
-    {
-    label: 'Apple',
-        value: 'apple',
-    icon: () => <Image source={require('../../assets/favicon.png')}/>,
-    parent: 'Current/Former Rank'
-    },
-    {
-    label: 'Banana',
-        value: 'banana',
-    icon: () => <Image source={require('../../assets/favicon.png')}/>,
-    parent: 'Current/Former Rank'
-    }
-];
-
-// Duty Stations to be exported for SignUp component dropdown
-export const dutyStationDropdownItems = [
-    {
-        label: 'Current/Former Duty Station',
-        value: 'Current/Former Duty Station',
-        icon: () => <Image source={require('../../assets/favicon.png')}/>,
-        disabled: true
-    },
-    {
-        label: 'Apple',
-        value: 'apple',
-        icon: () => <Image source={require('../../assets/favicon.png')}/>,
-        parent: 'Current/Former Duty Station'
-    },
-    {
-        label: 'Banana',
-        value: 'banana',
-        icon: () => <Image source={require('../../assets/favicon.png')}/>,
-        parent: 'Current/Former Duty Station'
-    }
-];
+import {Image} from "react-native"
 
 // Duty options to be exported for SignUp component dropdown
 export const dutyDropdownItems = [
     {
         label: 'Duty Status',
         value: 'Duty Status',
-        icon: () => <Image source={require('../../assets/favicon.png')}/>,
         disabled: true
     },
     {
-        label: 'Active',
-        value: 'Active',
-        icon: () => <Image source={require('../../assets/favicon.png')}/>,
+        label: 'Veteran',
+        value: 'Veteran',
+        icon: () => <Image source={require('../../assets/three-star.png')}/>,
         parent: 'Duty Status'
     },
     {
-        label: 'Inactive',
-        value: 'Inactive',
-        icon: () => <Image source={require('../../assets/favicon.png')}/>,
+        label: 'National Guard',
+        value: 'National Guard',
+        icon: () => <Image source={require('../../assets/shield.png')}/>,
         parent: 'Duty Status'
-    }
+    },
+    {
+        label: 'Reserves',
+        value: 'Reserves',
+        icon: () => <Image source={require('../../assets/lifebuoy.png')}/>,
+        parent: 'Duty Status'
+    },
+    {
+        label: 'Active Duty',
+        value: 'Active Duty',
+        icon: () => <Image source={require('../../assets/bell.png')}/>,
+        parent: 'Duty Status'
+    },
 ]
