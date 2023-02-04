@@ -141,7 +141,7 @@ export const styles = StyleSheet.create({
     errorMessage: {
         marginTop: 5,
         fontFamily: 'Raleway-Bold',
-        fontSize: 10,
+        fontSize: 12,
         color: 'red'
     },
     errorMessageMain: {

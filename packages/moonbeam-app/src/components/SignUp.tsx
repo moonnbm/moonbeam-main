@@ -22,7 +22,7 @@ export const SignUpComponent = ({navigation, route}: SignUpProps) => {
     // state driven key-value pairs for UI related elements
     const [emailFocus, setIsEmailFocus] = useState<boolean>(false);
     const [nameFocus, setIsNameFocus] = useState<boolean>(false);
-    const [dateLocationFocus, setIsDateLocationFocus] = useState<boolean>(false);
+    const [birthDateFocus, setIsBirthDateFocus] = useState<boolean>(false);
     const [phoneFocus, setIsPhoneFocus] = useState<boolean>(false);
     const [dutyOpen, setIsDutyOpen] = useState(false);
     const [dutyItems, setDutyItems] = useState(dutyDropdownItems);
@@ -36,9 +36,10 @@ export const SignUpComponent = ({navigation, route}: SignUpProps) => {
     const [progressStepsErrors, setProgressStepsErrors] = useState<boolean>(false);
     const [email, setEmail] = useState<string>("");
     const [emailErrors, setEmailErrors] = useState<any[]>([]);
-
     const [name, setName] = useState<string>("");
-    const [birthDate, setBirthDate] = useState<Date>(new Date());
+    const [nameErrors, setNameErrors] = useState<any[]>([]);
+    const [birthDate, setBirthDate] = useState<string>("");
+    const [dateErrors, setDateErrors] = useState<any[]>([]);
     const [duty, setDuty] = useState(null);
     const [rank, setRank] = useState<string>("");
     const [dutyStation, setDutyStation] = useState<string>("");
@@ -64,6 +65,57 @@ export const SignUpComponent = ({navigation, route}: SignUpProps) => {
                 confirmPassword: confirmPassword,
                 phoneNumber: phoneNumber},
         });
+
+    const fieldValidation = (fieldName: string) => {
+        switch(fieldName) {
+            case 'email':
+                validate({
+                    ...({[fieldName]: {minLength: 7, email: true, required: true}}),
+                });
+                // this is done because the in-built library for emails, does not fully work properly
+                if (isFieldInError('email') && !/^([^\s@]+@[^\s@]+\.[^\s@]+)$/.test(email)) {
+                    setProgressStepsErrors(true);
+                    setEmailErrors(getErrorsInField('email'));
+                } else {
+                    setProgressStepsErrors(false);
+                    setEmailErrors([]);
+                }
+                break;
+            case 'name':
+                validate({
+                    ...({[fieldName]: {minLength: 2, maxLength: 62, number: false, required: true}}),
+                });
+                if (isFieldInError('name')) {
+                    setProgressStepsErrors(true);
+                    setNameErrors(getErrorsInField('name'));
+                } else if (!/^([A-Za-z]{3,16})([ ]{0,1})([A-Za-z]{3,16})?([ ]{0,1})?([A-Za-z]{3,16})$/.test(name)) {
+                    setProgressStepsErrors(false);
+                    setNameErrors(["Name formatting not valid (First | Middle | Last)."]);
+                } else {
+                    setProgressStepsErrors(false);
+                    setNameErrors([]);
+                }
+                break;
+            case 'birthDate':
+                validate({
+                    ...({[fieldName]: {date: 'MM/DD/YYYY', required: true}}),
+                });
+                if (isFieldInError('birthDate')) {
+                    setProgressStepsErrors(true);
+                    setDateErrors(getErrorsInField('birthDate'));
+                } else if (!/^(0[1-9]|1[012])[- /.](0[1-9]|[12][0-9]|3[01])[- /.](19|20)$/.test(birthDate)) {
+                    setProgressStepsErrors(false);
+                    setDateErrors(["Date of Birth, must be a valid date (MM/DD/YYYY)."]);
+                }
+                else {
+                    setProgressStepsErrors(false);
+                    setDateErrors([]);
+                }
+                break;
+            default:
+                throw new Error('Unexpected field name!');
+        }
+    }
 
     return (
         <ImageBackground
@@ -98,7 +150,7 @@ export const SignUpComponent = ({navigation, route}: SignUpProps) => {
                             nextBtnStyle={styles.initialNextBtnStyle}
                             nextBtnTextStyle={styles.btnStyleText}
                             onNext={() => {
-                                if (email === "" || name === "" || birthDate.toDateString() === "") {
+                                if (email === "" || name === "" || birthDate === "") {
                                     setProgressStepMainError(true);
                                     setProgressStepsErrors(true);
                                 }
@@ -109,31 +161,12 @@ export const SignUpComponent = ({navigation, route}: SignUpProps) => {
                             {progressStepsMainError && <Text style={styles.errorMessageMain}>Please fill out the information below!</Text>}
                             <TextInput
                                 onEndEditing={() => {
-                                    validate({
-                                        email: {minLength: 7, email: true, required: true},
-                                    });
-                                    if (isFieldInError('email')) {
-                                        setProgressStepsErrors(true);
-                                        setEmailErrors(getErrorsInField('email'));
-                                    } else {
-                                        setProgressStepsErrors(false);
-                                        setEmailErrors([]);
-                                    }
+                                    fieldValidation('email');
                                 }}
                                 onChangeText={(value) => {
                                     setProgressStepMainError(false);
-                                    validate({
-                                        email: {minLength: 7, email: true, required: true},
-                                    });
-                                    if (isFieldInError('email')) {
-                                        setProgressStepsErrors(true);
-                                        setEmailErrors(getErrorsInField('email'));
-                                    } else {
-                                        console.log('here mofo 2');
-                                        setProgressStepsErrors(false);
-                                        setEmailErrors([]);
-                                    }
-                                    setEmail(value)
+                                    fieldValidation('email');
+                                    setEmail(value);
                                 }}
                                 value={email}
                                 style={emailFocus ? styles.initialTextInputFocus : styles.initialTextInput}
@@ -149,27 +182,49 @@ export const SignUpComponent = ({navigation, route}: SignUpProps) => {
                             {emailErrors.length > 0 && !progressStepsMainError ? <Text style={styles.errorMessage}>{emailErrors[0]}</Text> : <></>}
 
                             <TextInput
+                                onEndEditing={() => {
+                                    fieldValidation('name');
+                                }}
+                                onChangeText={(value) => {
+                                    setProgressStepMainError(false);
+                                    fieldValidation('name');
+                                    setName(value);
+                                }}
+                                value={name}
                                 style={nameFocus ? styles.textInputFocus : styles.textInput}
                                 onFocus={() => {
                                     setIsNameFocus(true);
                                 }}
-                                label="Full Name"
+                                label="Full Name (First | Middle | Last )"
                                 textColor={"#313030"}
                                 underlineColor={"#f2f2f2"}
                                 activeUnderlineColor={"#313030"}
                                 left={<TextInput.Icon icon="account" iconColor="#313030"/>}
                             />
+                            {nameErrors.length > 0 && !progressStepsMainError ? <Text style={styles.errorMessage}>{nameErrors[0]}</Text> : <></>}
+
                             <TextInput
-                                style={dateLocationFocus ? styles.textInputFocus : styles.textInput}
-                                onFocus={() => {
-                                    setIsDateLocationFocus(true);
+                                onEndEditing={() => {
+                                    fieldValidation('birthDate');
                                 }}
-                                label="Birthday (DD/MM/YYY)"
+                                onChangeText={(value) => {
+                                    setProgressStepMainError(false);
+                                    fieldValidation('birthDate');
+                                    setBirthDate(value);
+                                }}
+                                value={birthDate}
+                                style={birthDateFocus ? styles.textInputFocus : styles.textInput}
+                                onFocus={() => {
+                                    setIsBirthDateFocus(true);
+                                }}
+                                label="Birthday (MM/DD/YYYY)"
                                 textColor={"#313030"}
                                 underlineColor={"#f2f2f2"}
                                 activeUnderlineColor={"#313030"}
                                 left={<TextInput.Icon icon="calendar" iconColor="#313030"/>}
                             />
+                            {dateErrors.length > 0 && !progressStepsMainError ? <Text style={styles.errorMessage}>{dateErrors[0]}</Text> : <></>}
+
                         </ProgressStep>
                         <ProgressStep
                             // note do not enable this unless we need more space for content
