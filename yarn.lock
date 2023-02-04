@@ -7180,7 +7180,7 @@ dateformat@^3.0.0:
   resolved "https://registry.yarnpkg.com/dateformat/-/dateformat-3.0.3.tgz#a6e37499a4d9a9cf85ef5872044d62901c9889ae"
   integrity sha512-jyCETtSl3VMZMWeRo7iY1FL19ges1t55hMo5yaam4Jrsm5EPL89UQkoQRyiI+Yf4k8r2ZpdngkV8hr1lIdjb3Q==
 
-dayjs@^1.8.15:
+dayjs@^1.11.7, dayjs@^1.8.15:
   version "1.11.7"
   resolved "https://registry.yarnpkg.com/dayjs/-/dayjs-1.11.7.tgz#4b296922642f70999544d1144a2c25730fce63e2"
   integrity sha512-+Yw9U6YO5TQohxLcIkrXBeY73WP3ejHWVvx8XCk3gxvQDCTEmS48ZrSZCKciI7Bhl/uCMyxYtE9UqRILmFphkQ==
@@ -11877,11 +11877,6 @@ react-native-codegen@^0.70.6:
     flow-parser "^0.121.0"
     jscodeshift "^0.13.1"
     nullthrows "^1.1.1"
-
-react-native-datefield@^0.3.6:
-  version "0.3.6"
-  resolved "https://registry.yarnpkg.com/react-native-datefield/-/react-native-datefield-0.3.6.tgz#5c5b95c10f679ba03716821cbb31dcecfa277003"
-  integrity sha512-BPhvNrCeJBRGfW5r0UBq+nnhmmIIjXO9EMkF5bhi/onJUdn6PowU5pbgWmY77C0FL3vyk6EZOQ+9LUhiqM1sLg==
 
 react-native-dropdown-picker@^5.4.4:
   version "5.4.4"

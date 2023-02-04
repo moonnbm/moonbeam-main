@@ -9,6 +9,7 @@ import {Button, TextInput} from "react-native-paper";
 import DropDownPicker from "react-native-dropdown-picker";
 import {dutyDropdownItems} from "../common/Common";
 import moment from "moment";
+import dayjs from 'dayjs';
 // @ts-ignore
 import {useValidation} from 'react-native-form-validator';
 
@@ -40,16 +41,12 @@ export const SignUpComponent = ({navigation, route}: SignUpProps) => {
     const [nameErrors, setNameErrors] = useState<any[]>([]);
     const [birthDate, setBirthDate] = useState<string>("");
     const [dateErrors, setDateErrors] = useState<any[]>([]);
-    const [duty, setDuty] = useState(null);
+    const [duty, setDuty] = useState<string | null>(null);
     const [rank, setRank] = useState<string>("");
     const [dutyStation, setDutyStation] = useState<string>("");
     const [password, setPassword] = useState<string>("");
     const [confirmPassword, setConfirmPassword] = useState<string>("");
-    const [phoneNumber, setPhoneNumber] = useState<number>("");
-
-    // calculates the maximum value for the input dates (minimum 17 to sign-up, maximum 100)
-    const minimumDate = moment().subtract(100, "years").toDate();
-    const maximumDate = moment().subtract(17, "years").toDate();
+    const [phoneNumber, setPhoneNumber] = useState<string>("");
 
     // Constants used for easy field validation, to validate, check if field is invalid or get errors for invalid field
     const {validate, isFieldInError, getErrorsInField} =
@@ -63,51 +60,55 @@ export const SignUpComponent = ({navigation, route}: SignUpProps) => {
                 dutyStation: dutyStation,
                 password: password,
                 confirmPassword: confirmPassword,
-                phoneNumber: phoneNumber},
+                phoneNumber: phoneNumber
+            },
         });
 
-    const fieldValidation = (fieldName: string) => {
-        switch(fieldName) {
+    const fieldValidation = (fieldName: string, useValidator: boolean) => {
+        switch (fieldName) {
             case 'email':
-                validate({
+                useValidator && validate({
                     ...({[fieldName]: {minLength: 7, email: true, required: true}}),
                 });
                 // this is done because the in-built library for emails, does not fully work properly
-                if (isFieldInError('email') && !/^([^\s@]+@[^\s@]+\.[^\s@]+)$/.test(email)) {
+                if (isFieldInError('email') || !/^([^\s@]+@[^\s@]+\.[^\s@]+)$/.test(email)) {
                     setProgressStepsErrors(true);
-                    setEmailErrors(getErrorsInField('email'));
+                    setEmailErrors([...getErrorsInField('email'), "Invalid email address."]);
                 } else {
                     setProgressStepsErrors(false);
                     setEmailErrors([]);
                 }
                 break;
             case 'name':
-                validate({
+                useValidator && validate({
                     ...({[fieldName]: {minLength: 2, maxLength: 62, number: false, required: true}}),
                 });
-                if (isFieldInError('name')) {
+                if (isFieldInError('name') || !/^(\b([A-ZÀ-ÿ][-,a-z. ']+[ ]*){2,})$/.test(name)) {
                     setProgressStepsErrors(true);
-                    setNameErrors(getErrorsInField('name'));
-                } else if (!/^([A-Za-z]{3,16})([ ]{0,1})([A-Za-z]{3,16})?([ ]{0,1})?([A-Za-z]{3,16})$/.test(name)) {
-                    setProgressStepsErrors(false);
-                    setNameErrors(["Name formatting not valid (First | Middle | Last)."]);
+                    setNameErrors([...getErrorsInField('name'), "Name formatting not valid (First | Middle | Last)."]);
                 } else {
                     setProgressStepsErrors(false);
                     setNameErrors([]);
                 }
                 break;
             case 'birthDate':
-                validate({
-                    ...({[fieldName]: {date: 'MM/DD/YYYY', required: true}}),
+                useValidator && validate({
+                    ...({[fieldName]: {date: 'YYYY-MM-DD', required: true}}),
                 });
-                if (isFieldInError('birthDate')) {
+                if (isFieldInError('birthDate') && !/^(19|20)\d\d[- /.](0[1-9]|1[012])[- /.](0[1-9]|[12][0-9]|3[01])$/.test(birthDate)) {
                     setProgressStepsErrors(true);
-                    setDateErrors(getErrorsInField('birthDate'));
-                } else if (!/^(0[1-9]|1[012])[- /.](0[1-9]|[12][0-9]|3[01])[- /.](19|20)$/.test(birthDate)) {
-                    setProgressStepsErrors(false);
-                    setDateErrors(["Date of Birth, must be a valid date (MM/DD/YYYY)."]);
-                }
-                else {
+                    setDateErrors([...getErrorsInField('birthDate'), "Date of Birth must be a valid date (YYYY-MM-DD)."]);
+                } else if (isNaN(Date.parse(birthDate)) == true) {
+                    setProgressStepsErrors(true);
+                    dateErrors.push("Date of Birth must be a valid date (YYYY-MM-DD).");
+                    // maximum age is 100, and minum age is 17
+                } else if (Math.abs(dayjs(Date.parse(birthDate)).diff(Date.now(), "years")) > 100) {
+                    setProgressStepsErrors(true);
+                    dateErrors.push("You must be at most 100 years old.");
+                } else if (Math.abs(dayjs(Date.parse(birthDate)).diff(Date.now(), "years")) < 17) {
+                    setProgressStepsErrors(true);
+                    dateErrors.push("You must be at least 17 years old.");
+                } else {
                     setProgressStepsErrors(false);
                     setDateErrors([]);
                 }
@@ -150,22 +151,29 @@ export const SignUpComponent = ({navigation, route}: SignUpProps) => {
                             nextBtnStyle={styles.initialNextBtnStyle}
                             nextBtnTextStyle={styles.btnStyleText}
                             onNext={() => {
+                                fieldValidation("email", false);
+                                fieldValidation("name", false);
+                                fieldValidation("birthDate", false);
                                 if (email === "" || name === "" || birthDate === "") {
                                     setProgressStepMainError(true);
+                                    setProgressStepsErrors(true);
+                                }
+                                if (emailErrors.length !== 0 || nameErrors.length !== 0 || dateErrors.length !== 0) {
                                     setProgressStepsErrors(true);
                                 }
                                 dutyOpen && setIsDutyOpen(false);
                             }}
                             errors={progressStepsErrors}>
                             <Text style={styles.contactProgressTitle}>Contact Information</Text>
-                            {progressStepsMainError && <Text style={styles.errorMessageMain}>Please fill out the information below!</Text>}
+                            {progressStepsMainError &&
+                                <Text style={styles.errorMessageMain}>Please fill out the information below!</Text>}
                             <TextInput
                                 onEndEditing={() => {
-                                    fieldValidation('email');
+                                    fieldValidation('email', true);
                                 }}
                                 onChangeText={(value) => {
                                     setProgressStepMainError(false);
-                                    fieldValidation('email');
+                                    fieldValidation('email', true);
                                     setEmail(value);
                                 }}
                                 value={email}
@@ -179,15 +187,16 @@ export const SignUpComponent = ({navigation, route}: SignUpProps) => {
                                 activeUnderlineColor={"#313030"}
                                 left={<TextInput.Icon icon="email" iconColor="#313030"/>}
                             />
-                            {emailErrors.length > 0 && !progressStepsMainError ? <Text style={styles.errorMessage}>{emailErrors[0]}</Text> : <></>}
+                            {emailErrors.length > 0 && !progressStepsMainError ?
+                                <Text style={styles.errorMessage}>{emailErrors[0]}</Text> : <></>}
 
                             <TextInput
                                 onEndEditing={() => {
-                                    fieldValidation('name');
+                                    fieldValidation('name', true);
                                 }}
                                 onChangeText={(value) => {
                                     setProgressStepMainError(false);
-                                    fieldValidation('name');
+                                    fieldValidation('name', true);
                                     setName(value);
                                 }}
                                 value={name}
@@ -201,15 +210,16 @@ export const SignUpComponent = ({navigation, route}: SignUpProps) => {
                                 activeUnderlineColor={"#313030"}
                                 left={<TextInput.Icon icon="account" iconColor="#313030"/>}
                             />
-                            {nameErrors.length > 0 && !progressStepsMainError ? <Text style={styles.errorMessage}>{nameErrors[0]}</Text> : <></>}
+                            {nameErrors.length > 0 && !progressStepsMainError ?
+                                <Text style={styles.errorMessage}>{nameErrors[0]}</Text> : <></>}
 
                             <TextInput
                                 onEndEditing={() => {
-                                    fieldValidation('birthDate');
+                                    fieldValidation('birthDate', true);
                                 }}
                                 onChangeText={(value) => {
                                     setProgressStepMainError(false);
-                                    fieldValidation('birthDate');
+                                    fieldValidation('birthDate', true);
                                     setBirthDate(value);
                                 }}
                                 value={birthDate}
@@ -217,13 +227,14 @@ export const SignUpComponent = ({navigation, route}: SignUpProps) => {
                                 onFocus={() => {
                                     setIsBirthDateFocus(true);
                                 }}
-                                label="Birthday (MM/DD/YYYY)"
+                                label="Birthday (YYYY-MM-DD)"
                                 textColor={"#313030"}
                                 underlineColor={"#f2f2f2"}
                                 activeUnderlineColor={"#313030"}
                                 left={<TextInput.Icon icon="calendar" iconColor="#313030"/>}
                             />
-                            {dateErrors.length > 0 && !progressStepsMainError ? <Text style={styles.errorMessage}>{dateErrors[0]}</Text> : <></>}
+                            {dateErrors.length > 0 && !progressStepsMainError ?
+                                <Text style={styles.errorMessage}>{dateErrors[0]}</Text> : <></>}
 
                         </ProgressStep>
                         <ProgressStep
@@ -260,6 +271,10 @@ export const SignUpComponent = ({navigation, route}: SignUpProps) => {
                                 setOpen={setIsDutyOpen}
                                 setValue={setDuty}
                                 setItems={setDutyItems}
+                                onSelectItem={(item) => {
+                                    setProgressStepMainError(false);
+                                    setDuty(item.value!);
+                                }}
                             />
                             <TextInput
                                 style={rankFocus ? styles.textInputFocus : styles.textInput}
