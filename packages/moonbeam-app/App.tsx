@@ -1,3 +1,5 @@
+import {Amplify} from 'aws-amplify';
+import awsconfig from './src/aws-exports';
 import React, {useCallback, useEffect, useState} from 'react';
 import * as SplashScreen from 'expo-splash-screen';
 import {SignInComponent} from './src/components/SignIn'
@@ -11,6 +13,9 @@ import {RootStackParamList} from './src/models/PageProps';
 
 // keep the splash screen visible while we fetch resources
 SplashScreen.preventAutoHideAsync();
+
+// set up Amplify
+Amplify.configure(awsconfig)
 
 /**
  * Main application entrypoint.

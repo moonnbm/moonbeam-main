@@ -137,5 +137,17 @@ export const styles = StyleSheet.create({
         fontFamily: 'Raleway-Bold',
         fontSize: 13,
         color: '#2A3779'
+    },
+    errorMessage: {
+        marginTop: 5,
+        fontFamily: 'Raleway-Bold',
+        fontSize: 10,
+        color: 'red'
+    },
+    errorMessageMain: {
+        alignSelf: 'center',
+        fontFamily: 'Raleway-Bold',
+        fontSize: 12,
+        color: 'red'
     }
 });

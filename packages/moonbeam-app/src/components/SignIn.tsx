@@ -14,7 +14,6 @@ export const SignInComponent = ({navigation, route}: SignInProps) => {
     // state driven key-value pairs
     const [usernameFocus, setIsUsernameFocus] = useState<boolean>(false);
     const [passwordFocus, setIsPasswordFocus] = useState<boolean>(false);
-    // const [isKeyboardVisible, setKeyboardVisible] = useState(false);
 
     /**
      * Entrypoint UseEffect will be used as a block of code where we perform specific tasks (such as
@@ -24,24 +23,14 @@ export const SignInComponent = ({navigation, route}: SignInProps) => {
      * included in here.
      */
     useEffect(() => {
-        // const keyboardDidShowListener = Keyboard.addListener(
-        //     'keyboardDidShow',
-        //     () => {
-        //         setKeyboardVisible(true); // or some other action
-        //     }
-        // );
-        // const keyboardDidHideListener = Keyboard.addListener(
-        //     'keyboardDidHide',
-        //     () => {
-        //         setKeyboardVisible(false); // or some other action
-        //     }
-        // );
-        //
-        // return () => {
-        //     keyboardDidHideListener.remove();
-        //     keyboardDidShowListener.remove();
-        // };
     }, [])
+
+    /**
+     * Function used to capture the sign in button action press
+     */
+    const onSignInPressed = async () => {
+        console.log("lala")
+    }
 
     // return the component for the application
     return (
@@ -89,6 +78,7 @@ export const SignInComponent = ({navigation, route}: SignInProps) => {
                         </Text>
                     </View>
                     <Button
+                        onPress={(_) => onSignInPressed()}
                         style={styles.signInFooterButton}
                         textColor={"#f2f2f2"}
                         buttonColor={"#2A3779"}
