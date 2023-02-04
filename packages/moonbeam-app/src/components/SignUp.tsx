@@ -8,7 +8,6 @@ import {ProgressStep, ProgressSteps} from 'react-native-progress-steps';
 import {Button, TextInput} from "react-native-paper";
 import DropDownPicker from "react-native-dropdown-picker";
 import {dutyDropdownItems} from "../common/Common";
-import moment from "moment";
 import dayjs from 'dayjs';
 // @ts-ignore
 import {useValidation} from 'react-native-form-validator';
@@ -33,7 +32,8 @@ export const SignUpComponent = ({navigation, route}: SignUpProps) => {
     const [confirmPasswordFocus, setIsConfirmPasswordFocus] = useState<boolean>(false);
     const [registerButtonShown, setIsRegisterButtonShown] = useState<boolean>(false);
     // state driven key-value pairs for signup form values
-    const [progressStepsMainError, setProgressStepMainError] = useState<boolean>(false);
+    const [progressStepsContactError, setProgressStepsContactError] = useState<boolean>(false);
+    const [progressStepsMilitaryError, setProgressStepsMilitaryError] = useState<boolean>(false);
     const [progressStepsErrors, setProgressStepsErrors] = useState<boolean>(false);
     const [email, setEmail] = useState<string>("");
     const [emailErrors, setEmailErrors] = useState<any[]>([]);
@@ -42,8 +42,11 @@ export const SignUpComponent = ({navigation, route}: SignUpProps) => {
     const [birthDate, setBirthDate] = useState<string>("");
     const [dateErrors, setDateErrors] = useState<any[]>([]);
     const [duty, setDuty] = useState<string | null>(null);
+    const [dutyErrors, setDutyErrors] = useState<any[]>([]);
     const [rank, setRank] = useState<string>("");
+    const [rankErrors, setRankErrors] = useState<any[]>([]);
     const [dutyStation, setDutyStation] = useState<string>("");
+    const [dutyStationErrors, setDutyStationErrors] = useState<any[]>([]);
     const [password, setPassword] = useState<string>("");
     const [confirmPassword, setConfirmPassword] = useState<string>("");
     const [phoneNumber, setPhoneNumber] = useState<string>("");
@@ -64,6 +67,12 @@ export const SignUpComponent = ({navigation, route}: SignUpProps) => {
             },
         });
 
+    /**
+     * Helper function used to validate fields
+     *
+     * @param fieldName name of the field to validate
+     * @param useValidator flag highlighting whether to use the validator library or not
+     */
     const fieldValidation = (fieldName: string, useValidator: boolean) => {
         switch (fieldName) {
             case 'email':
@@ -100,17 +109,59 @@ export const SignUpComponent = ({navigation, route}: SignUpProps) => {
                     setDateErrors([...getErrorsInField('birthDate'), "Date of Birth must be a valid date (YYYY-MM-DD)."]);
                 } else if (isNaN(Date.parse(birthDate)) == true) {
                     setProgressStepsErrors(true);
-                    dateErrors.push("Date of Birth must be a valid date (YYYY-MM-DD).");
+                    setDateErrors(["Date of Birth must be a valid date (YYYY-MM-DD)."]);
                     // maximum age is 100, and minum age is 17
                 } else if (Math.abs(dayjs(Date.parse(birthDate)).diff(Date.now(), "years")) > 100) {
                     setProgressStepsErrors(true);
-                    dateErrors.push("You must be at most 100 years old.");
+                    setDateErrors(["You must be at most 100 years old."]);
                 } else if (Math.abs(dayjs(Date.parse(birthDate)).diff(Date.now(), "years")) < 17) {
                     setProgressStepsErrors(true);
-                    dateErrors.push("You must be at least 17 years old.");
+                    setDateErrors(["You must be at least 17 years old."]);
                 } else {
                     setProgressStepsErrors(false);
                     setDateErrors([]);
+                }
+                break;
+            case 'duty':
+                useValidator && validate({
+                    ...({
+                        [fieldName]: {
+                            minLength: 7,
+                            maxLength: 14,
+                            required: true
+                        }
+                    }),
+                });
+                if (isFieldInError('duty') || !duty) {
+                    setProgressStepsErrors(true);
+                    setDutyErrors([...getErrorsInField('duty'), "Please select a Duty Status."]);
+                } else {
+                    setProgressStepsErrors(false);
+                    setDutyErrors([]);
+                }
+                break;
+            case 'rank':
+                useValidator && validate({
+                    ...({[fieldName]: {minLength: 2, maxLength: 35, required: true}}),
+                });
+                if (isFieldInError('rank') || !/^(\w{2,35})$/.test(rank)) {
+                    setProgressStepsErrors(true);
+                    setRankErrors([...getErrorsInField('rank'), "Invalid Military Rank format."]);
+                } else {
+                    setProgressStepsErrors(false);
+                    setRankErrors([]);
+                }
+                break;
+            case 'dutyStation':
+                useValidator && validate({
+                    ...({[fieldName]: {minLength: 2, maxLength: 35, required: true}}),
+                });
+                if (isFieldInError('dutyStation') || !/^([A-Z][a-z]{5,80})$/.test(dutyStation)) {
+                    setProgressStepsErrors(true);
+                    setDutyStationErrors([...getErrorsInField('dutyStation'), "Invalid Duty Station format."]);
+                } else {
+                    setProgressStepsErrors(false);
+                    setDutyStationErrors([]);
                 }
                 break;
             default:
@@ -126,7 +177,8 @@ export const SignUpComponent = ({navigation, route}: SignUpProps) => {
             style={commonStyles.image}
             source={require('../../assets/signup-background.png')}>
             <KeyboardAvoidingView
-                behavior={Platform.OS !== 'ios' ? 'position' : 'position'}
+                behavior={Platform.OS == 'ios' ? 'position' : 'height'}
+                keyboardVerticalOffset={Platform.OS == 'ios' ? -80 : 100}
                 style={commonStyles.container}>
                 <View style={[commonStyles.container, {marginTop: '30%'}]}>
                     <View>
@@ -151,28 +203,31 @@ export const SignUpComponent = ({navigation, route}: SignUpProps) => {
                             nextBtnStyle={styles.initialNextBtnStyle}
                             nextBtnTextStyle={styles.btnStyleText}
                             onNext={() => {
-                                fieldValidation("email", false);
-                                fieldValidation("name", false);
-                                fieldValidation("birthDate", false);
                                 if (email === "" || name === "" || birthDate === "") {
-                                    setProgressStepMainError(true);
+                                    setProgressStepsContactError(true);
                                     setProgressStepsErrors(true);
+                                } else {
+                                    fieldValidation("email", false);
+                                    fieldValidation("name", false);
+                                    fieldValidation("birthDate", false);
+                                    if (emailErrors.length !== 0 || nameErrors.length !== 0 || dateErrors.length !== 0) {
+                                        setProgressStepsErrors(true);
+                                    } else if (emailErrors.length === 0 && nameErrors.length === 0 && dateErrors.length === 0) {
+                                        dutyOpen && setIsDutyOpen(false);
+                                        setProgressStepsContactError(false);
+                                    }
                                 }
-                                if (emailErrors.length !== 0 || nameErrors.length !== 0 || dateErrors.length !== 0) {
-                                    setProgressStepsErrors(true);
-                                }
-                                dutyOpen && setIsDutyOpen(false);
                             }}
                             errors={progressStepsErrors}>
                             <Text style={styles.contactProgressTitle}>Contact Information</Text>
-                            {progressStepsMainError &&
+                            {progressStepsContactError &&
                                 <Text style={styles.errorMessageMain}>Please fill out the information below!</Text>}
                             <TextInput
                                 onEndEditing={() => {
                                     fieldValidation('email', true);
                                 }}
                                 onChangeText={(value) => {
-                                    setProgressStepMainError(false);
+                                    setProgressStepsContactError(false);
                                     fieldValidation('email', true);
                                     setEmail(value);
                                 }}
@@ -187,7 +242,7 @@ export const SignUpComponent = ({navigation, route}: SignUpProps) => {
                                 activeUnderlineColor={"#313030"}
                                 left={<TextInput.Icon icon="email" iconColor="#313030"/>}
                             />
-                            {emailErrors.length > 0 && !progressStepsMainError ?
+                            {(emailErrors.length > 0 && !progressStepsContactError) ?
                                 <Text style={styles.errorMessage}>{emailErrors[0]}</Text> : <></>}
 
                             <TextInput
@@ -195,7 +250,7 @@ export const SignUpComponent = ({navigation, route}: SignUpProps) => {
                                     fieldValidation('name', true);
                                 }}
                                 onChangeText={(value) => {
-                                    setProgressStepMainError(false);
+                                    setProgressStepsContactError(false);
                                     fieldValidation('name', true);
                                     setName(value);
                                 }}
@@ -210,7 +265,7 @@ export const SignUpComponent = ({navigation, route}: SignUpProps) => {
                                 activeUnderlineColor={"#313030"}
                                 left={<TextInput.Icon icon="account" iconColor="#313030"/>}
                             />
-                            {nameErrors.length > 0 && !progressStepsMainError ?
+                            {(nameErrors.length > 0 && !progressStepsContactError) ?
                                 <Text style={styles.errorMessage}>{nameErrors[0]}</Text> : <></>}
 
                             <TextInput
@@ -218,7 +273,7 @@ export const SignUpComponent = ({navigation, route}: SignUpProps) => {
                                     fieldValidation('birthDate', true);
                                 }}
                                 onChangeText={(value) => {
-                                    setProgressStepMainError(false);
+                                    setProgressStepsContactError(false);
                                     fieldValidation('birthDate', true);
                                     setBirthDate(value);
                                 }}
@@ -233,7 +288,7 @@ export const SignUpComponent = ({navigation, route}: SignUpProps) => {
                                 activeUnderlineColor={"#313030"}
                                 left={<TextInput.Icon icon="calendar" iconColor="#313030"/>}
                             />
-                            {dateErrors.length > 0 && !progressStepsMainError ?
+                            {(dateErrors.length > 0 && !progressStepsContactError) ?
                                 <Text style={styles.errorMessage}>{dateErrors[0]}</Text> : <></>}
 
                         </ProgressStep>
@@ -248,15 +303,31 @@ export const SignUpComponent = ({navigation, route}: SignUpProps) => {
                             previousBtnStyle={styles.prevBtnStyle}
                             previousBtnTextStyle={styles.btnStyleText}
                             onNext={() => {
-                                setIsRegisterButtonShown(true);
-                                dutyOpen && setIsDutyOpen(false);
+                                if (duty === "" || rank === "" || dutyStation === "") {
+                                    setProgressStepsMilitaryError(true);
+                                    setProgressStepsErrors(true);
+                                } else {
+                                    fieldValidation("duty", false);
+                                    fieldValidation("rank", false);
+                                    fieldValidation("dutyStation", false);
+                                    if (dutyErrors.length !== 0 || rankErrors.length !== 0 || dutyStationErrors.length !== 0) {
+                                        setProgressStepsErrors(true);
+                                    } else {
+                                        setIsRegisterButtonShown(true);
+                                        dutyOpen && setIsDutyOpen(false);
+                                        setProgressStepsMilitaryError(false);
+                                    }
+                                }
                             }}
                             errors={progressStepsErrors}
                             onPrevious={() => {
+                                setProgressStepsMilitaryError(false);
                                 setIsRegisterButtonShown(false);
                                 dutyOpen && setIsDutyOpen(false);
                             }}>
                             <Text style={styles.militaryProgressTitle}>Military Information</Text>
+                            {progressStepsMilitaryError &&
+                                <Text style={styles.errorMessageMain}>Please fill out the information below!</Text>}
                             <DropDownPicker
                                 zIndex={1000}
                                 zIndexInverse={3000}
@@ -272,11 +343,24 @@ export const SignUpComponent = ({navigation, route}: SignUpProps) => {
                                 setValue={setDuty}
                                 setItems={setDutyItems}
                                 onSelectItem={(item) => {
-                                    setProgressStepMainError(false);
+                                    setProgressStepsMilitaryError(false);
+                                    fieldValidation('duty', true);
                                     setDuty(item.value!);
                                 }}
                             />
+                            {(dutyErrors.length > 0 && !progressStepsMilitaryError) ?
+                                <Text style={styles.errorMessage}>{dutyErrors[0]}</Text> : <></>}
+
                             <TextInput
+                                onEndEditing={() => {
+                                    fieldValidation('rank', true);
+                                }}
+                                onChangeText={(value) => {
+                                    setProgressStepsMilitaryError(false);
+                                    fieldValidation('rank', true);
+                                    setRank(value);
+                                }}
+                                value={rank}
                                 style={rankFocus ? styles.textInputFocus : styles.textInput}
                                 onFocus={() => {
                                     setIsRankFocus(true);
@@ -287,7 +371,19 @@ export const SignUpComponent = ({navigation, route}: SignUpProps) => {
                                 activeUnderlineColor={"#313030"}
                                 left={<TextInput.Icon icon="chevron-triple-up" iconColor="#313030"/>}
                             />
+                            {(rankErrors.length > 0 && !progressStepsMilitaryError) ?
+                                <Text style={styles.errorMessage}>{rankErrors[0]}</Text> : <></>}
+
                             <TextInput
+                                onEndEditing={() => {
+                                    fieldValidation('dutyStation', true);
+                                }}
+                                onChangeText={(value) => {
+                                    setProgressStepsMilitaryError(false);
+                                    fieldValidation('dutyStation', true);
+                                    setDutyStation(value);
+                                }}
+                                value={dutyStation}
                                 style={dutyStationFocus ? styles.textInputFocus : styles.textInput}
                                 onFocus={() => {
                                     setIsDutyStationFocus(true);
@@ -298,6 +394,9 @@ export const SignUpComponent = ({navigation, route}: SignUpProps) => {
                                 activeUnderlineColor={"#313030"}
                                 left={<TextInput.Icon icon="office-building-marker" iconColor="#313030"/>}
                             />
+                            {(dutyStationErrors.length > 0 && !progressStepsMilitaryError) ?
+                                <Text style={styles.errorMessage}>{dutyStationErrors[0]}</Text> : <></>}
+
                         </ProgressStep>
                         <ProgressStep
                             // note do not enable this unless we need more space for content

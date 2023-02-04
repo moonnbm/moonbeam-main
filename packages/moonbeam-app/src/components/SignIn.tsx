@@ -1,5 +1,5 @@
 import React, {useEffect, useState} from 'react';
-import {Image, ImageBackground, KeyboardAvoidingView, Text, View} from 'react-native';
+import {Image, ImageBackground, KeyboardAvoidingView, Platform, Text, View} from 'react-native';
 import {Button, TextInput} from 'react-native-paper';
 import {styles} from '../styles/signin.module';
 // @ts-ignore
@@ -41,7 +41,8 @@ export const SignInComponent = ({navigation, route}: SignInProps) => {
             }}
             source={require('../../assets/login-background.png')}>
             <KeyboardAvoidingView
-                behavior="height"
+                behavior={Platform.OS == 'ios' ? 'height' : 'height'}
+                keyboardVerticalOffset={Platform.OS == 'ios' ? -150 : -130}
                 onLayout={route.params.onLayoutRootView}
                 style={commonStyles.container}>
                 <View style={styles.mainView}>
