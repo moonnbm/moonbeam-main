@@ -30,6 +30,9 @@ export const SignUpComponent = ({navigation, route}: SignUpProps) => {
     const [passwordFocus, setIsPasswordFocus] = useState<boolean>(false);
     const [confirmPasswordFocus, setIsConfirmPasswordFocus] = useState<boolean>(false);
     const [registerButtonShown, setIsRegisterButtonShown] = useState<boolean>(false);
+    const [isInitialRender, setIsInitialRender] = useState<boolean>(route.params.initialRender);
+    const [modalVisible, setModalVisible] = useState<boolean>(false);
+    const [modalError, setModalError] = useState<string>("");
     // state driven key-value pairs for signup form values
     const [progressStepsContactError, setProgressStepsContactError] = useState<boolean>(false);
     const [progressStepsMilitaryError, setProgressStepsMilitaryError] = useState<boolean>(false);
@@ -55,9 +58,6 @@ export const SignUpComponent = ({navigation, route}: SignUpProps) => {
     const [confirmPasswordErrors, setConfirmPasswordErrors] = useState<any[]>([]);
     const [phoneNumber, setPhoneNumber] = useState<string>("");
     const [phoneNumberErrors, setPhoneNumberErrors] = useState<any[]>([]);
-    const [isInitialRender, setIsInitialRender] = useState<boolean>(route.params.initialRender);
-    const [modalVisible, setModalVisible] = useState<boolean>(false);
-    const [modalError, setModalError] = useState<string>("");
 
     // Constants used for easy field validation, to validate, check if field is invalid or get errors for invalid field
     const {validate, isFieldInError, getErrorsInField} =
@@ -349,7 +349,7 @@ export const SignUpComponent = ({navigation, route}: SignUpProps) => {
             </Portal>
             <KeyboardAvoidingView
                 behavior={Platform.OS == 'ios' ? 'position' : 'height'}
-                keyboardVerticalOffset={Platform.OS == 'ios' ? -80 : 100}
+                keyboardVerticalOffset={Platform.OS == 'ios' ? -230 : 100}
                 style={commonStyles.container}>
                 <View style={[commonStyles.container, {marginTop: '30%'}]}>
                     <View>
@@ -386,6 +386,7 @@ export const SignUpComponent = ({navigation, route}: SignUpProps) => {
                                     } else if (emailErrors.length === 0 && nameErrors.length === 0 && dateErrors.length === 0) {
                                         dutyOpen && setIsDutyOpen(false);
                                         setProgressStepsContactError(false);
+                                        setProgressStepsErrors(false);
                                     }
                                 }
                             }}
@@ -656,6 +657,7 @@ export const SignUpComponent = ({navigation, route}: SignUpProps) => {
                                         setProgressStepsSecurityError(false);
                                         setProgressStepsErrors(false);
                                         signUp(email, name, birthDate, duty!, rank, dutyStation, password, phoneNumber);
+                                        setProgressStepsErrors(false);
                                     }
                                 }
                             }}>

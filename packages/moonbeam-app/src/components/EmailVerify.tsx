@@ -9,7 +9,7 @@ import {Button, Modal, Portal, TextInput} from "react-native-paper";
 import {Auth} from "aws-amplify";
 
 /**
- * Sign In component.
+ * Email Verification component.
  */
 export const EmailVerify = ({navigation, route}: EmailVerifyProps) => {
     // state driven key-value pairs
@@ -48,9 +48,9 @@ export const EmailVerify = ({navigation, route}: EmailVerifyProps) => {
             setModalVisible(true);
             setIsErrorModal(true);
             setIsResendModal(false);
-            console.log(`Error confirming sign up code :, ${error}`);
+            console.log(`Unexpected error while confirming sign up code :, ${error}`);
         }
-    }
+    };
 
     /**
      * Function used to capture the confirmation button press
@@ -68,9 +68,9 @@ export const EmailVerify = ({navigation, route}: EmailVerifyProps) => {
             setModalVisible(true);
             setIsErrorModal(true);
             setIsResendModal(false);
-            console.log(`Error resending verification code: ${error}`);
+            console.log(`Unexpected error while resending verification code: ${error}`);
         }
-    }
+    };
 
     // return the component for the EmailVerification page
     return (
@@ -128,10 +128,11 @@ export const EmailVerify = ({navigation, route}: EmailVerifyProps) => {
                         onFocus={() => {
                             setIsConfirmationCodeFocus(true);
                         }}
-                        label="Confirmation Code"
+                        label="Verification Code"
                         textColor={"#313030"}
                         underlineColor={"#f2f2f2"}
                         activeUnderlineColor={"#313030"}
+                        left={<TextInput.Icon icon="dialpad" iconColor="#313030"/>}
                     />
                     <Button
                         onPress={() => onConfirmPressed(code)}

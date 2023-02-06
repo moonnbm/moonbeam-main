@@ -12,6 +12,9 @@ export type RootStackParamList = {
     },
     EmailVerify: {
         username: string;
+    },
+    ForgotPassword: {
+        initialRender: boolean;
     }
 };
 
@@ -21,3 +24,5 @@ export type SignInProps = NativeStackScreenProps<RootStackParamList, 'SignIn'>
 export type SignUpProps = NativeStackScreenProps<RootStackParamList, 'SignUp'>
 // the EmailVerify component props
 export type EmailVerifyProps = NativeStackScreenProps<RootStackParamList, 'EmailVerify'>
+// the ForgotPassword component props
+export type ForgotPasswordProps = NativeStackScreenProps<RootStackParamList, 'ForgotPassword'>

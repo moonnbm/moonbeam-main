@@ -11,6 +11,7 @@ import {NavigationContainer} from '@react-navigation/native';
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
 import {RootStackParamList} from './src/models/PageProps';
 import { EmailVerify } from './src/components/EmailVerify';
+import { ForgotPassword } from './src/components/ForgotPassword';
 
 // keep the splash screen visible while we fetch resources
 SplashScreen.preventAutoHideAsync();
@@ -114,6 +115,16 @@ export default function App() {
                                 title: '',
                                 headerBackTitleVisible: false,
                                 headerBackVisible: false
+                            }}
+                        />
+                        <Stack.Screen
+                            name="ForgotPassword"
+                            component={ForgotPassword}
+                            options={{
+                                headerTransparent: true,
+                                title: '',
+                                headerBackTitleVisible: false,
+                                headerTintColor: '#2A3779'
                             }}
                         />
                     </Stack.Navigator>

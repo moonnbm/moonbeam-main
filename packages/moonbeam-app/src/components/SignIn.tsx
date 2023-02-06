@@ -59,6 +59,7 @@ export const SignInComponent = ({navigation, route}: SignInProps) => {
                         textColor={"#313030"}
                         underlineColor={"#f2f2f2"}
                         activeUnderlineColor={"#313030"}
+                        left={<TextInput.Icon icon="email" iconColor="#313030"/>}
                     />
                     <TextInput
                         style={passwordFocus ? styles.textInputFocus : styles.textInput}
@@ -71,10 +72,12 @@ export const SignInComponent = ({navigation, route}: SignInProps) => {
                         underlineColor={"#f2f2f2"}
                         activeUnderlineColor={"#313030"}
                         right={<TextInput.Icon icon="eye" iconColor="#313030"/>}
+                        left={<TextInput.Icon icon="lock" iconColor="#313030"/>}
                     />
                     <View style={styles.forgotPasswordView}>
                         <Text style={styles.forgotPasswordButton}
                               onPress={() => {
+                                  navigation.navigate('ForgotPassword', {initialRender: true})
                               }}>Forgot Password ?
                         </Text>
                     </View>
