@@ -150,5 +150,36 @@ export const styles = StyleSheet.create({
         fontFamily: 'Raleway-Bold',
         fontSize: 12,
         color: 'red'
+    },
+    modelTitle: {
+        marginBottom: '5%',
+        fontFamily: 'Raleway-Medium',
+        fontSize: 55,
+        width: 350,
+        color: '#313030',
+    },
+    modalParagraph: {
+        textAlign: 'center',
+        alignSelf: 'flex-start',
+        fontFamily: 'Raleway-Regular',
+        fontSize: 16,
+        width: 350,
+        color: '#313030'
+    },
+    modalContainer: {
+        alignSelf: 'center',
+        backgroundColor: 'white',
+        width: 400,
+        borderRadius: 15,
+        padding: 20,
+        borderWidth: 1,
+        borderColor: 'red'
+    },
+    modalButton: {
+        borderRadius: 25,
+        borderColor: 'red',
+        height: 40,
+        width: 350,
+        marginTop: '10%'
     }
 });

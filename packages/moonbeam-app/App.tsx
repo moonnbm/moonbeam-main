@@ -10,6 +10,7 @@ import {theme} from './src/utils/Theme';
 import {NavigationContainer} from '@react-navigation/native';
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
 import {RootStackParamList} from './src/models/PageProps';
+import { EmailVerify } from './src/components/EmailVerify';
 
 // keep the splash screen visible while we fetch resources
 SplashScreen.preventAutoHideAsync();
@@ -104,6 +105,16 @@ export default function App() {
                                 headerTintColor: '#2A3779'
                             }}
                             initialParams={{initialRender: true}}
+                        />
+                        <Stack.Screen
+                            name="EmailVerify"
+                            component={EmailVerify}
+                            options={{
+                                headerTransparent: true,
+                                title: '',
+                                headerBackTitleVisible: false,
+                                headerBackVisible: false
+                            }}
                         />
                     </Stack.Navigator>
                 </NavigationContainer>

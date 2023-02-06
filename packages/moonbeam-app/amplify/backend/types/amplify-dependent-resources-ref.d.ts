@@ -1,8 +1,9 @@
 export type AmplifyDependentResourcesAttributes = {
   "auth": {
-    "mooonbeamapp997da008": {
+    "mooonbeamapp": {
       "AppClientID": "string",
       "AppClientIDWeb": "string",
+      "CreatedSNSRole": "string",
       "IdentityPoolId": "string",
       "IdentityPoolName": "string",
       "UserPoolArn": "string",

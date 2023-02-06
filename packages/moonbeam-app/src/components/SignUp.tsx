@@ -2,16 +2,17 @@ import React, {useEffect, useState} from "react";
 import {ImageBackground, KeyboardAvoidingView, Platform, Text, View} from "react-native";
 import {SignUpProps} from "../models/PageProps";
 import {commonStyles} from '../styles/common.module';
-import {styles} from '../styles/signup.module';
+import {styles} from '../styles/signUp.module';
 // @ts-ignore
 import {ProgressStep, ProgressSteps} from 'react-native-progress-steps';
-import {Button, TextInput} from "react-native-paper";
+import {Button, Modal, Portal, TextInput} from "react-native-paper";
 import DropDownPicker from "react-native-dropdown-picker";
 import {dutyDropdownItems} from "../common/Common";
 import dayjs from 'dayjs';
 // @ts-ignore
 import {useValidation} from 'react-native-form-validator';
 import moment from 'moment';
+import {Auth} from 'aws-amplify';
 
 /**
  * Sign Up component.
@@ -55,6 +56,8 @@ export const SignUpComponent = ({navigation, route}: SignUpProps) => {
     const [phoneNumber, setPhoneNumber] = useState<string>("");
     const [phoneNumberErrors, setPhoneNumberErrors] = useState<any[]>([]);
     const [isInitialRender, setIsInitialRender] = useState<boolean>(route.params.initialRender);
+    const [modalVisible, setModalVisible] = useState<boolean>(false);
+    const [modalError, setModalError] = useState<string>("");
 
     // Constants used for easy field validation, to validate, check if field is invalid or get errors for invalid field
     const {validate, isFieldInError, getErrorsInField} =
@@ -187,19 +190,7 @@ export const SignUpComponent = ({navigation, route}: SignUpProps) => {
                 }
                 break;
             case 'confirmPassword':
-                validate({
-                    ...({
-                        [fieldName]: {
-                            minLength: 12,
-                            maxLength: 72,
-                            required: true,
-                        }
-                    }),
-                });
-                if (isFieldInError('confirmPassword') || !/^((?=.*\d)(?=.*[!@#$%^&*])(?=.*[a-z])(?=.*[A-Z]).{12,72})$/.test(confirmPassword)) {
-                    setProgressStepsErrors(true);
-                    setConfirmPasswordErrors([...getErrorsInField('confirmPassword'), "Invalid Password - max 72 chars, min: 12 chars, 1 special character, 1 number, 1 lowerCase, 1 UpperCase."]);
-                } else if (password !== confirmPassword) {
+                if (password !== confirmPassword) {
                     setProgressStepsErrors(true);
                     setConfirmPasswordErrors([...getErrorsInField('confirmPassword'), "Passwords do not match."]);
                 } else {
@@ -226,7 +217,47 @@ export const SignUpComponent = ({navigation, route}: SignUpProps) => {
                 }
                 break;
             default:
-                throw new Error('Unexpected field name!');
+                console.log('Unexpected field name!');
+        }
+    }
+
+    /**
+     * Function used for the Sign Up functionality, using AWSAmplify.
+     *
+     * @param username new user's username, synonymous with their email
+     * @param name new user's name
+     * @param birthDate new user's birth date
+     * @param dutyStatus new user's duty status
+     * @param militaryRank new user's military rank
+     * @param dutyStation new user's duty station
+     * @param password new user's password
+     * @param phoneNumber new user's phone number
+     */
+    const signUp = async (username: string, name: string, birthDate: string, dutyStatus: string,
+                          militaryRank: string, dutyStation: string, password: string, phoneNumber: string) => {
+        try {
+            await Auth.signUp({
+                username,
+                password,
+                attributes: {
+                    email: username,
+                    phone_number: `+1${phoneNumber.replaceAll('(', '')
+                        .replaceAll(')', '')
+                        .replaceAll('-', '')}`,
+                    name: name,
+                    birthdate: birthDate,
+                    updated_at: Date.now().toString(),
+                    'custom:duty_station': dutyStation,
+                    'custom:duty_status': dutyStatus,
+                    'custom:military_rank': militaryRank
+                },
+            });
+            navigation.navigate('EmailVerify', {username: username});
+        } catch (error) {
+            // @ts-ignore
+            setModalError(error.message);
+            setModalVisible(true);
+            console.log(`Unexpected error while Signing Up: ${error}`);
         }
     }
 
@@ -293,6 +324,7 @@ export const SignUpComponent = ({navigation, route}: SignUpProps) => {
         dutyOpen, rankFocus, dutyStationFocus, passwordFocus,
         confirmPasswordFocus, phoneFocus]);
 
+    // return the component for the SignUp page
     return (
         <ImageBackground
             imageStyle={{
@@ -300,6 +332,21 @@ export const SignUpComponent = ({navigation, route}: SignUpProps) => {
             }}
             style={commonStyles.image}
             source={require('../../assets/signup-background.png')}>
+            <Portal>
+                <Modal dismissable={false} visible={modalVisible} onDismiss={() => setModalVisible(false)} contentContainerStyle={styles.modalContainer}>
+                    <Text style={styles.modalParagraph}>{modalError}</Text>
+                    <Button
+                        style={styles.modalButton}
+                        icon={'redo-variant'}
+                        textColor={"red"}
+                        buttonColor={"#f2f2f2"}
+                        mode="outlined"
+                        labelStyle={{fontSize: 15}}
+                        onPress={() => {setModalVisible(false)}}>
+                        Try Again
+                    </Button>
+                </Modal>
+            </Portal>
             <KeyboardAvoidingView
                 behavior={Platform.OS == 'ios' ? 'position' : 'height'}
                 keyboardVerticalOffset={Platform.OS == 'ios' ? -80 : 100}
@@ -535,7 +582,8 @@ export const SignUpComponent = ({navigation, route}: SignUpProps) => {
                                 textColor={"#313030"}
                                 underlineColor={"#f2f2f2"}
                                 activeUnderlineColor={"#313030"}
-                                right={<TextInput.Icon icon="eye" iconColor="#313030" onPress={() => setIsPasswordShown(!passwordShown)}/>}
+                                right={<TextInput.Icon icon="eye" iconColor={passwordShown ? "#A2B000" : "#313030"}
+                                                       onPress={() => setIsPasswordShown(!passwordShown)}/>}
                                 left={<TextInput.Icon icon="lock" iconColor="#313030"/>}
                             />
                             {(passwordErrors.length > 0 && !progressStepsSecurityError) ?
@@ -556,7 +604,8 @@ export const SignUpComponent = ({navigation, route}: SignUpProps) => {
                                 textColor={"#313030"}
                                 underlineColor={"#f2f2f2"}
                                 activeUnderlineColor={"#313030"}
-                                right={<TextInput.Icon icon="eye" iconColor="#313030" onPress={() => setIsConfirmPasswordShown(!confirmPasswordShown)}/>}
+                                right={<TextInput.Icon icon="eye" iconColor={confirmPasswordShown ? "#A2B000" : "#313030"}
+                                                       onPress={() => setIsConfirmPasswordShown(!confirmPasswordShown)}/>}
                                 left={<TextInput.Icon icon="lock" iconColor="#313030"/>}
                             />
                             {(confirmPasswordErrors.length > 0 && !progressStepsSecurityError) ?
@@ -606,6 +655,7 @@ export const SignUpComponent = ({navigation, route}: SignUpProps) => {
                                     } else {
                                         setProgressStepsSecurityError(false);
                                         setProgressStepsErrors(false);
+                                        signUp(email, name, birthDate, duty!, rank, dutyStation, password, phoneNumber);
                                     }
                                 }
                             }}>

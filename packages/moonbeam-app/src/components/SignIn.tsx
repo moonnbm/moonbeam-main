@@ -1,7 +1,7 @@
 import React, {useEffect, useState} from 'react';
 import {Image, ImageBackground, KeyboardAvoidingView, Platform, Text, View} from 'react-native';
 import {Button, TextInput} from 'react-native-paper';
-import {styles} from '../styles/signin.module';
+import {styles} from '../styles/signIn.module';
 // @ts-ignore
 import LoginLogo from '../../assets/login-logo.png';
 import {SignInProps} from '../models/PageProps'
@@ -32,7 +32,7 @@ export const SignInComponent = ({navigation, route}: SignInProps) => {
         console.log("lala")
     }
 
-    // return the component for the application
+    // return the component for the SignIn page
     return (
         <ImageBackground
             style={commonStyles.image}

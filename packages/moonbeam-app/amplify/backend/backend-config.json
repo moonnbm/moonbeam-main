@@ -1,6 +1,6 @@
 {
   "auth": {
-    "mooonbeamapp997da008": {
+    "mooonbeamapp": {
       "customAuth": false,
       "dependsOn": [],
       "frontendAuthConfig": {
@@ -9,16 +9,24 @@
           "SMS"
         ],
         "passwordProtectionSettings": {
-          "passwordPolicyCharacters": [],
-          "passwordPolicyMinLength": 8
+          "passwordPolicyCharacters": [
+            "REQUIRES_LOWERCASE",
+            "REQUIRES_NUMBERS",
+            "REQUIRES_SYMBOLS",
+            "REQUIRES_UPPERCASE"
+          ],
+          "passwordPolicyMinLength": 12
         },
         "signupAttributes": [
-          "EMAIL"
+          "NAME",
+          "UPDATED_AT",
+          "BIRTHDATE",
+          "EMAIL",
+          "PHONE_NUMBER"
         ],
         "socialProviders": [],
         "usernameAttributes": [
-          "EMAIL",
-          "PHONE_NUMBER"
+          "EMAIL"
         ],
         "verificationMechanisms": [
           "EMAIL"
