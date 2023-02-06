@@ -103,7 +103,7 @@ export default function App() {
                                 headerBackTitleVisible: false,
                                 headerTintColor: '#2A3779'
                             }}
-                            initialParams={{}}
+                            initialParams={{initialRender: true}}
                         />
                     </Stack.Navigator>
                 </NavigationContainer>

@@ -1,4 +1,4 @@
-import React, {useState} from "react";
+import React, {useEffect, useState} from "react";
 import {ImageBackground, KeyboardAvoidingView, Platform, Text, View} from "react-native";
 import {SignUpProps} from "../models/PageProps";
 import {commonStyles} from '../styles/common.module';
@@ -11,14 +11,12 @@ import {dutyDropdownItems} from "../common/Common";
 import dayjs from 'dayjs';
 // @ts-ignore
 import {useValidation} from 'react-native-form-validator';
+import moment from 'moment';
 
 /**
  * Sign Up component.
  */
 export const SignUpComponent = ({navigation, route}: SignUpProps) => {
-    console.log(route);
-    console.log(navigation);
-
     // state driven key-value pairs for UI related elements
     const [emailFocus, setIsEmailFocus] = useState<boolean>(false);
     const [nameFocus, setIsNameFocus] = useState<boolean>(false);
@@ -34,6 +32,7 @@ export const SignUpComponent = ({navigation, route}: SignUpProps) => {
     // state driven key-value pairs for signup form values
     const [progressStepsContactError, setProgressStepsContactError] = useState<boolean>(false);
     const [progressStepsMilitaryError, setProgressStepsMilitaryError] = useState<boolean>(false);
+    const [progressStepsSecurityError, setProgressStepsSecurityError] = useState<boolean>(false);
     const [progressStepsErrors, setProgressStepsErrors] = useState<boolean>(false);
     const [email, setEmail] = useState<string>("");
     const [emailErrors, setEmailErrors] = useState<any[]>([]);
@@ -48,8 +47,14 @@ export const SignUpComponent = ({navigation, route}: SignUpProps) => {
     const [dutyStation, setDutyStation] = useState<string>("");
     const [dutyStationErrors, setDutyStationErrors] = useState<any[]>([]);
     const [password, setPassword] = useState<string>("");
+    const [passwordShown, setIsPasswordShown] = useState<boolean>(false);
+    const [passwordErrors, setPasswordErrors] = useState<any[]>([]);
     const [confirmPassword, setConfirmPassword] = useState<string>("");
+    const [confirmPasswordShown, setIsConfirmPasswordShown] = useState<boolean>(false);
+    const [confirmPasswordErrors, setConfirmPasswordErrors] = useState<any[]>([]);
     const [phoneNumber, setPhoneNumber] = useState<string>("");
+    const [phoneNumberErrors, setPhoneNumberErrors] = useState<any[]>([]);
+    const [isInitialRender, setIsInitialRender] = useState<boolean>(route.params.initialRender);
 
     // Constants used for easy field validation, to validate, check if field is invalid or get errors for invalid field
     const {validate, isFieldInError, getErrorsInField} =
@@ -71,12 +76,11 @@ export const SignUpComponent = ({navigation, route}: SignUpProps) => {
      * Helper function used to validate fields
      *
      * @param fieldName name of the field to validate
-     * @param useValidator flag highlighting whether to use the validator library or not
      */
-    const fieldValidation = (fieldName: string, useValidator: boolean) => {
+    const fieldValidation = (fieldName: string) => {
         switch (fieldName) {
             case 'email':
-                useValidator && validate({
+                validate({
                     ...({[fieldName]: {minLength: 7, email: true, required: true}}),
                 });
                 // this is done because the in-built library for emails, does not fully work properly
@@ -89,7 +93,7 @@ export const SignUpComponent = ({navigation, route}: SignUpProps) => {
                 }
                 break;
             case 'name':
-                useValidator && validate({
+                validate({
                     ...({[fieldName]: {minLength: 2, maxLength: 62, number: false, required: true}}),
                 });
                 if (isFieldInError('name') || !/^(\b([A-ZÀ-ÿ][-,a-z. ']+[ ]*){2,})$/.test(name)) {
@@ -101,13 +105,13 @@ export const SignUpComponent = ({navigation, route}: SignUpProps) => {
                 }
                 break;
             case 'birthDate':
-                useValidator && validate({
+                validate({
                     ...({[fieldName]: {date: 'YYYY-MM-DD', required: true}}),
                 });
                 if (isFieldInError('birthDate') && !/^(19|20)\d\d[- /.](0[1-9]|1[012])[- /.](0[1-9]|[12][0-9]|3[01])$/.test(birthDate)) {
                     setProgressStepsErrors(true);
                     setDateErrors([...getErrorsInField('birthDate'), "Date of Birth must be a valid date (YYYY-MM-DD)."]);
-                } else if (isNaN(Date.parse(birthDate)) == true) {
+                } else if (!moment(birthDate, "YYYY-MM-DD", true).isValid()) {
                     setProgressStepsErrors(true);
                     setDateErrors(["Date of Birth must be a valid date (YYYY-MM-DD)."]);
                     // maximum age is 100, and minum age is 17
@@ -123,7 +127,7 @@ export const SignUpComponent = ({navigation, route}: SignUpProps) => {
                 }
                 break;
             case 'duty':
-                useValidator && validate({
+                validate({
                     ...({
                         [fieldName]: {
                             minLength: 7,
@@ -132,7 +136,7 @@ export const SignUpComponent = ({navigation, route}: SignUpProps) => {
                         }
                     }),
                 });
-                if (isFieldInError('duty') || !duty) {
+                if (isFieldInError('duty') || duty === null) {
                     setProgressStepsErrors(true);
                     setDutyErrors([...getErrorsInField('duty'), "Please select a Duty Status."]);
                 } else {
@@ -141,7 +145,7 @@ export const SignUpComponent = ({navigation, route}: SignUpProps) => {
                 }
                 break;
             case 'rank':
-                useValidator && validate({
+                validate({
                     ...({[fieldName]: {minLength: 2, maxLength: 35, required: true}}),
                 });
                 if (isFieldInError('rank') || !/^(\w{2,35})$/.test(rank)) {
@@ -153,10 +157,10 @@ export const SignUpComponent = ({navigation, route}: SignUpProps) => {
                 }
                 break;
             case 'dutyStation':
-                useValidator && validate({
+                validate({
                     ...({[fieldName]: {minLength: 2, maxLength: 35, required: true}}),
                 });
-                if (isFieldInError('dutyStation') || !/^([A-Z][a-z]{5,80})$/.test(dutyStation)) {
+                if (isFieldInError('dutyStation') || !/^([A-Za-z\.\s\']{5,80})$/.test(dutyStation)) {
                     setProgressStepsErrors(true);
                     setDutyStationErrors([...getErrorsInField('dutyStation'), "Invalid Duty Station format."]);
                 } else {
@@ -164,10 +168,130 @@ export const SignUpComponent = ({navigation, route}: SignUpProps) => {
                     setDutyStationErrors([]);
                 }
                 break;
+            case 'password':
+                validate({
+                    ...({
+                        [fieldName]: {
+                            minLength: 12,
+                            maxLength: 72,
+                            required: true,
+                        }
+                    }),
+                });
+                if (isFieldInError('password') || !/^((?=.*\d)(?=.*[!@#$%^&*])(?=.*[a-z])(?=.*[A-Z]).{12,72})$/.test(password)) {
+                    setProgressStepsErrors(true);
+                    setPasswordErrors([...getErrorsInField('password'), "Invalid Password - max 72 chars, min: 12 chars, 1 special character, 1 number, 1 lowerCase, 1 UpperCase."]);
+                } else {
+                    setProgressStepsErrors(false);
+                    setPasswordErrors([]);
+                }
+                break;
+            case 'confirmPassword':
+                validate({
+                    ...({
+                        [fieldName]: {
+                            minLength: 12,
+                            maxLength: 72,
+                            required: true,
+                        }
+                    }),
+                });
+                if (isFieldInError('confirmPassword') || !/^((?=.*\d)(?=.*[!@#$%^&*])(?=.*[a-z])(?=.*[A-Z]).{12,72})$/.test(confirmPassword)) {
+                    setProgressStepsErrors(true);
+                    setConfirmPasswordErrors([...getErrorsInField('confirmPassword'), "Invalid Password - max 72 chars, min: 12 chars, 1 special character, 1 number, 1 lowerCase, 1 UpperCase."]);
+                } else if (password !== confirmPassword) {
+                    setProgressStepsErrors(true);
+                    setConfirmPasswordErrors([...getErrorsInField('confirmPassword'), "Passwords do not match."]);
+                } else {
+                    setProgressStepsErrors(false);
+                    setConfirmPasswordErrors([]);
+                }
+                break;
+            case 'phoneNumber':
+                validate({
+                    ...({
+                        [fieldName]: {
+                            minLength: 14,
+                            maxLength: 14,
+                            required: true,
+                        }
+                    }),
+                });
+                if (isFieldInError('phoneNumber') || !/^((\([0-9]{3}\)-|[0-9]{3}-)[0-9]{3}-[0-9]{4})$/.test(phoneNumber)) {
+                    setProgressStepsErrors(true);
+                    setPhoneNumberErrors([...getErrorsInField('phoneNumber'), "Invalid Phone Number - (XXX)-XXX-XXXX."]);
+                } else {
+                    setProgressStepsErrors(false);
+                    setPhoneNumberErrors([]);
+                }
+                break;
             default:
                 throw new Error('Unexpected field name!');
         }
     }
+
+    /**
+     * Entrypoint UseEffect will be used as a block of code where we perform specific tasks (such as
+     * auth-related functionality for example), as well as any afferent API calls.
+     *
+     * Generally speaking, any functionality imperative prior to the full page-load should be
+     * included in here.
+     */
+    useEffect(() => {
+        // if it's an initial render, set all validation errors to empty
+        if (!isInitialRender) {
+            // perform field validations on every state change, for the specific field that is being validated
+            if (emailFocus && email !== "") {
+                fieldValidation("email");
+            }
+            email === "" && setEmailErrors([]);
+
+            if (nameFocus && name !== "") {
+                fieldValidation("name");
+            }
+            name === "" && setNameErrors([]);
+
+            if (birthDateFocus && birthDate !== "") {
+                fieldValidation("birthDate");
+            }
+            birthDate === "" && setDateErrors([]);
+
+            if (dutyOpen && duty !== null) {
+                fieldValidation("duty");
+            }
+            duty === null && setDutyErrors([]);
+
+            if (rankFocus && rank !== "") {
+                fieldValidation("rank");
+            }
+            rank === "" && setRankErrors([]);
+
+            if (dutyStationFocus && dutyStation !== "") {
+                fieldValidation("dutyStation");
+            }
+            dutyStation === "" && setDutyStationErrors([]);
+
+            if (passwordFocus && password !== "") {
+                fieldValidation("password");
+            }
+            if (confirmPasswordFocus) {
+                fieldValidation("confirmPassword");
+            }
+            password === "" && setPasswordErrors([]);
+            (confirmPassword === "" && password === "") && setConfirmPasswordErrors([]);
+
+            if (phoneFocus && phoneNumber !== "") {
+                fieldValidation("phoneNumber");
+            }
+            phoneNumber === "" && setPhoneNumberErrors([]);
+        } else {
+            setIsInitialRender(false);
+        }
+    }, [email, name, birthDate, duty,
+        rank, dutyStation, password, confirmPassword,
+        phoneNumber, emailFocus, nameFocus, birthDateFocus,
+        dutyOpen, rankFocus, dutyStationFocus, passwordFocus,
+        confirmPasswordFocus, phoneFocus]);
 
     return (
         <ImageBackground
@@ -207,9 +331,9 @@ export const SignUpComponent = ({navigation, route}: SignUpProps) => {
                                     setProgressStepsContactError(true);
                                     setProgressStepsErrors(true);
                                 } else {
-                                    fieldValidation("email", false);
-                                    fieldValidation("name", false);
-                                    fieldValidation("birthDate", false);
+                                    fieldValidation("email");
+                                    fieldValidation("name");
+                                    fieldValidation("birthDate");
                                     if (emailErrors.length !== 0 || nameErrors.length !== 0 || dateErrors.length !== 0) {
                                         setProgressStepsErrors(true);
                                     } else if (emailErrors.length === 0 && nameErrors.length === 0 && dateErrors.length === 0) {
@@ -223,12 +347,8 @@ export const SignUpComponent = ({navigation, route}: SignUpProps) => {
                             {progressStepsContactError &&
                                 <Text style={styles.errorMessageMain}>Please fill out the information below!</Text>}
                             <TextInput
-                                onEndEditing={() => {
-                                    fieldValidation('email', true);
-                                }}
                                 onChangeText={(value) => {
                                     setProgressStepsContactError(false);
-                                    fieldValidation('email', true);
                                     setEmail(value);
                                 }}
                                 value={email}
@@ -246,12 +366,8 @@ export const SignUpComponent = ({navigation, route}: SignUpProps) => {
                                 <Text style={styles.errorMessage}>{emailErrors[0]}</Text> : <></>}
 
                             <TextInput
-                                onEndEditing={() => {
-                                    fieldValidation('name', true);
-                                }}
                                 onChangeText={(value) => {
                                     setProgressStepsContactError(false);
-                                    fieldValidation('name', true);
                                     setName(value);
                                 }}
                                 value={name}
@@ -269,12 +385,8 @@ export const SignUpComponent = ({navigation, route}: SignUpProps) => {
                                 <Text style={styles.errorMessage}>{nameErrors[0]}</Text> : <></>}
 
                             <TextInput
-                                onEndEditing={() => {
-                                    fieldValidation('birthDate', true);
-                                }}
                                 onChangeText={(value) => {
                                     setProgressStepsContactError(false);
-                                    fieldValidation('birthDate', true);
                                     setBirthDate(value);
                                 }}
                                 value={birthDate}
@@ -290,8 +402,8 @@ export const SignUpComponent = ({navigation, route}: SignUpProps) => {
                             />
                             {(dateErrors.length > 0 && !progressStepsContactError) ?
                                 <Text style={styles.errorMessage}>{dateErrors[0]}</Text> : <></>}
-
                         </ProgressStep>
+
                         <ProgressStep
                             // note do not enable this unless we need more space for content
                             scrollable={false}
@@ -303,19 +415,20 @@ export const SignUpComponent = ({navigation, route}: SignUpProps) => {
                             previousBtnStyle={styles.prevBtnStyle}
                             previousBtnTextStyle={styles.btnStyleText}
                             onNext={() => {
-                                if (duty === "" || rank === "" || dutyStation === "") {
+                                if (duty === null || duty === "" || rank === "" || dutyStation === "") {
                                     setProgressStepsMilitaryError(true);
                                     setProgressStepsErrors(true);
                                 } else {
-                                    fieldValidation("duty", false);
-                                    fieldValidation("rank", false);
-                                    fieldValidation("dutyStation", false);
+                                    fieldValidation("duty");
+                                    fieldValidation("rank");
+                                    fieldValidation("dutyStation");
                                     if (dutyErrors.length !== 0 || rankErrors.length !== 0 || dutyStationErrors.length !== 0) {
                                         setProgressStepsErrors(true);
                                     } else {
                                         setIsRegisterButtonShown(true);
                                         dutyOpen && setIsDutyOpen(false);
                                         setProgressStepsMilitaryError(false);
+                                        setProgressStepsErrors(false);
                                     }
                                 }
                             }}
@@ -337,6 +450,7 @@ export const SignUpComponent = ({navigation, route}: SignUpProps) => {
                                 style={styles.initialDropdownPicker}
                                 textStyle={{fontFamily: 'Raleway-Regular'}}
                                 open={dutyOpen}
+                                onClose={() => setIsDutyOpen(false)}
                                 value={duty}
                                 items={dutyItems}
                                 setOpen={setIsDutyOpen}
@@ -344,7 +458,6 @@ export const SignUpComponent = ({navigation, route}: SignUpProps) => {
                                 setItems={setDutyItems}
                                 onSelectItem={(item) => {
                                     setProgressStepsMilitaryError(false);
-                                    fieldValidation('duty', true);
                                     setDuty(item.value!);
                                 }}
                             />
@@ -352,12 +465,8 @@ export const SignUpComponent = ({navigation, route}: SignUpProps) => {
                                 <Text style={styles.errorMessage}>{dutyErrors[0]}</Text> : <></>}
 
                             <TextInput
-                                onEndEditing={() => {
-                                    fieldValidation('rank', true);
-                                }}
                                 onChangeText={(value) => {
                                     setProgressStepsMilitaryError(false);
-                                    fieldValidation('rank', true);
                                     setRank(value);
                                 }}
                                 value={rank}
@@ -375,12 +484,8 @@ export const SignUpComponent = ({navigation, route}: SignUpProps) => {
                                 <Text style={styles.errorMessage}>{rankErrors[0]}</Text> : <></>}
 
                             <TextInput
-                                onEndEditing={() => {
-                                    fieldValidation('dutyStation', true);
-                                }}
                                 onChangeText={(value) => {
                                     setProgressStepsMilitaryError(false);
-                                    fieldValidation('dutyStation', true);
                                     setDutyStation(value);
                                 }}
                                 value={dutyStation}
@@ -396,8 +501,8 @@ export const SignUpComponent = ({navigation, route}: SignUpProps) => {
                             />
                             {(dutyStationErrors.length > 0 && !progressStepsMilitaryError) ?
                                 <Text style={styles.errorMessage}>{dutyStationErrors[0]}</Text> : <></>}
-
                         </ProgressStep>
+
                         <ProgressStep
                             // note do not enable this unless we need more space for content
                             scrollable={false}
@@ -407,36 +512,62 @@ export const SignUpComponent = ({navigation, route}: SignUpProps) => {
                             finishBtnText={""}
                             previousBtnStyle={styles.lastPrevBtnStyle}
                             previousBtnTextStyle={styles.btnStyleText}
-                            onPrevious={() => setIsRegisterButtonShown(false)}
-                            errors={progressStepsErrors}>
+                            errors={progressStepsErrors}
+                            onPrevious={() => {
+                                setProgressStepsSecurityError(false);
+                                setIsRegisterButtonShown(false);
+                            }}>
                             <Text style={styles.securityProgressTitle}>Account Security</Text>
+                            {progressStepsSecurityError &&
+                                <Text style={styles.errorMessageMain}>Please fill out the information below!</Text>}
                             <TextInput
+                                onChangeText={(value) => {
+                                    setProgressStepsSecurityError(false);
+                                    setPassword(value);
+                                }}
+                                value={password}
                                 style={passwordFocus ? styles.initialTextInputFocus : styles.initialTextInput}
                                 onFocus={() => {
                                     setIsPasswordFocus(true);
                                 }}
                                 label="Password"
-                                secureTextEntry
+                                secureTextEntry={!passwordShown}
                                 textColor={"#313030"}
                                 underlineColor={"#f2f2f2"}
                                 activeUnderlineColor={"#313030"}
-                                right={<TextInput.Icon icon="eye" iconColor="#313030"/>}
+                                right={<TextInput.Icon icon="eye" iconColor="#313030" onPress={() => setIsPasswordShown(!passwordShown)}/>}
                                 left={<TextInput.Icon icon="lock" iconColor="#313030"/>}
                             />
+                            {(passwordErrors.length > 0 && !progressStepsSecurityError) ?
+                                <Text style={styles.errorMessage}>{passwordErrors[0]}</Text> : <></>}
+
                             <TextInput
+                                onChangeText={(value) => {
+                                    setProgressStepsSecurityError(false);
+                                    setConfirmPassword(value);
+                                }}
+                                value={confirmPassword}
                                 style={confirmPasswordFocus ? styles.textInputFocus : styles.textInput}
                                 onFocus={() => {
                                     setIsConfirmPasswordFocus(true);
                                 }}
                                 label="Confirm Password"
-                                secureTextEntry
+                                secureTextEntry={!confirmPasswordShown}
                                 textColor={"#313030"}
                                 underlineColor={"#f2f2f2"}
                                 activeUnderlineColor={"#313030"}
-                                right={<TextInput.Icon icon="eye" iconColor="#313030"/>}
+                                right={<TextInput.Icon icon="eye" iconColor="#313030" onPress={() => setIsConfirmPasswordShown(!confirmPasswordShown)}/>}
                                 left={<TextInput.Icon icon="lock" iconColor="#313030"/>}
                             />
+                            {(confirmPasswordErrors.length > 0 && !progressStepsSecurityError) ?
+                                <Text style={styles.errorMessage}>{confirmPasswordErrors[0]}</Text> : <></>}
+
                             <TextInput
+                                onChangeText={(value) => {
+                                    setProgressStepsSecurityError(false);
+                                    setPhoneNumber(value);
+                                }}
+                                value={phoneNumber}
                                 style={phoneFocus ? styles.textInputFocus : styles.textInput}
                                 onFocus={() => {
                                     setIsPhoneFocus(true);
@@ -447,6 +578,9 @@ export const SignUpComponent = ({navigation, route}: SignUpProps) => {
                                 activeUnderlineColor={"#313030"}
                                 left={<TextInput.Icon icon="phone" iconColor="#313030"/>}
                             />
+                            {(phoneNumberErrors.length > 0 && !progressStepsSecurityError) ?
+                                <Text style={styles.errorMessage}>{phoneNumberErrors[0]}</Text> : <></>}
+
                         </ProgressStep>
                     </ProgressSteps>
                 </View>
@@ -458,7 +592,23 @@ export const SignUpComponent = ({navigation, route}: SignUpProps) => {
                             textColor={"#f2f2f2"}
                             buttonColor={"#2A3779"}
                             mode="outlined"
-                            labelStyle={{fontSize: 18}}>
+                            labelStyle={{fontSize: 18}}
+                            onPress={() => {
+                                if (password === "" || confirmPassword === "" || phoneNumber === "") {
+                                    setProgressStepsSecurityError(true);
+                                    setProgressStepsErrors(true);
+                                } else {
+                                    fieldValidation("password");
+                                    fieldValidation("confirmPassword");
+                                    fieldValidation("phoneNumber");
+                                    if (passwordErrors.length !== 0 || confirmPasswordErrors.length !== 0 || phoneNumberErrors.length !== 0) {
+                                        setProgressStepsErrors(true);
+                                    } else {
+                                        setProgressStepsSecurityError(false);
+                                        setProgressStepsErrors(false);
+                                    }
+                                }
+                            }}>
                             Register
                         </Button>
                         <Text style={styles.disclaimerText}>
@@ -471,3 +621,4 @@ export const SignUpComponent = ({navigation, route}: SignUpProps) => {
         </ImageBackground>
     );
 };
+

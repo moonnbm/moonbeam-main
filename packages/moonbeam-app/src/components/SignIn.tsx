@@ -23,7 +23,7 @@ export const SignInComponent = ({navigation, route}: SignInProps) => {
      * included in here.
      */
     useEffect(() => {
-    }, [])
+    }, []);
 
     /**
      * Function used to capture the sign in button action press
@@ -92,7 +92,7 @@ export const SignInComponent = ({navigation, route}: SignInProps) => {
                         <Text style={styles.loginFooter}>Don't have an account ?
                             <Text style={styles.loginFooterButton}
                                   onPress={() => {
-                                      navigation.navigate('SignUp', {})
+                                      navigation.navigate('SignUp', {initialRender: true})
                                   }}> Sign up</Text>
                         </Text>
                     </View>

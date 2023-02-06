@@ -8,7 +8,7 @@ export type RootStackParamList = {
         onLayoutRootView?: () => Promise<void>;
     },
     SignUp: {
-
+        initialRender: boolean;
     }
 };
 

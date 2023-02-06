@@ -139,6 +139,7 @@ export const styles = StyleSheet.create({
         color: '#2A3779'
     },
     errorMessage: {
+        width: 350,
         marginTop: 5,
         fontFamily: 'Raleway-Bold',
         fontSize: 12,
