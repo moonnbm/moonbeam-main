@@ -99,5 +99,24 @@ export const styles = StyleSheet.create({
         height: 40,
         width: 350,
         marginTop: '10%'
+    },
+    disclaimerView: {
+        marginTop: '20%'
+    },
+    disclaimerText: {
+        fontFamily: 'Raleway-Medium',
+        color: '#313030',
+        fontSize: 13,
+        width: 350,
+        marginTop: '3%',
+        textAlign: 'center'
+    },
+    disclaimerModified: {
+        fontFamily: 'Raleway-Bold',
+        color: '#2A3779',
+        fontSize: 13,
+        width: 350,
+        marginTop: '3%',
+        textAlign: 'center'
     }
 });

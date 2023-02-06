@@ -1,12 +1,12 @@
 import React, {useEffect, useState} from "react";
 import {EmailVerifyProps} from "../models/PageProps";
 import {Image, ImageBackground, KeyboardAvoidingView, Platform, Text, View} from "react-native";
-import { commonStyles } from "../styles/common.module";
-import { styles } from "../styles/emailVerify.module";
+import {commonStyles} from "../styles/common.module";
+import {styles} from "../styles/emailVerify.module";
 // @ts-ignore
 import CongratulationsSplash from '../../assets/congratulations.png';
-import {Button, Modal, Portal, TextInput } from "react-native-paper";
-import { Auth } from "aws-amplify";
+import {Button, Modal, Portal, TextInput} from "react-native-paper";
+import {Auth} from "aws-amplify";
 
 /**
  * Sign In component.
@@ -18,6 +18,7 @@ export const EmailVerify = ({navigation, route}: EmailVerifyProps) => {
     const [modalMessage, setModalMessage] = useState<string>("");
     const [code, setCode] = useState<string>("");
     const [isErrorModal, setIsErrorModal] = useState<boolean>(false);
+    const [isResendModal, setIsResendModal] = useState<boolean>(false);
 
     /**
      * Entrypoint UseEffect will be used as a block of code where we perform specific tasks (such as
@@ -39,12 +40,14 @@ export const EmailVerify = ({navigation, route}: EmailVerifyProps) => {
             await Auth.confirmSignUp(route.params.username, code);
             setModalMessage("Thanks for confirming the code! Your email address is now verified!");
             setModalVisible(true);
+            setIsResendModal(false);
             setIsErrorModal(false);
         } catch (error) {
             // @ts-ignore
             setModalMessage(error.message);
             setModalVisible(true);
             setIsErrorModal(true);
+            setIsResendModal(false);
             console.log(`Error confirming sign up code :, ${error}`);
         }
     }
@@ -53,7 +56,20 @@ export const EmailVerify = ({navigation, route}: EmailVerifyProps) => {
      * Function used to capture the confirmation button press
      */
     const onResendCodePressed = async () => {
-        console.log("lala")
+        try {
+            await Auth.resendSignUp(route.params.username);
+            setModalMessage("Re-sending verification code! You should receive an email shortly");
+            setModalVisible(true);
+            setIsResendModal(true);
+            setIsErrorModal(false);
+        } catch (error) {
+            // @ts-ignore
+            setModalMessage(error.message);
+            setModalVisible(true);
+            setIsErrorModal(true);
+            setIsResendModal(false);
+            console.log(`Error resending verification code: ${error}`);
+        }
     }
 
     // return the component for the EmailVerification page
@@ -79,10 +95,15 @@ export const EmailVerify = ({navigation, route}: EmailVerifyProps) => {
                             textColor: 'red',
                             buttonColor: '#f2f2f2'
                         }}
+                        {...isResendModal && {
+                            icon: 'redo-variant'
+                        }}
                         mode="outlined"
                         labelStyle={{fontSize: 15}}
-                        onPress={() => {!isErrorModal ? navigation.navigate('SignIn', {}): setModalVisible(false)}}>
-                        {isErrorModal ? `Try Again` : `Sign In`}
+                        onPress={() => {
+                            (isErrorModal || isResendModal) ? setModalVisible(false) : navigation.navigate('SignIn', {})
+                        }}>
+                        {(isErrorModal || isResendModal) ? `Try Again` : `Sign In`}
                     </Button>
                 </Modal>
             </Portal>
@@ -122,7 +143,7 @@ export const EmailVerify = ({navigation, route}: EmailVerifyProps) => {
                         Confirm
                     </Button>
                     <Button
-                        onPress={(_) => onResendCodePressed()}
+                        onPress={() => onResendCodePressed()}
                         style={styles.resendCodeButton}
                         textColor={"#f2f2f2"}
                         buttonColor={"#2A3779"}
@@ -133,7 +154,14 @@ export const EmailVerify = ({navigation, route}: EmailVerifyProps) => {
                     <View style={styles.bottomView}>
                         <Text style={styles.backToSignInFooter}>Back to
                             <Text style={styles.backToSignInButton}
-                                  onPress={() => {navigation.navigate('SignIn', {})}}> Sign in</Text>
+                                  onPress={() => {
+                                      navigation.navigate('SignIn', {})
+                                  }}> Sign in</Text>
+                        </Text>
+                    </View>
+                    <View style={styles.disclaimerView}>
+                        <Text style={styles.disclaimerText}>
+                            Verification codes will <Text style={styles.disclaimerModified}>expire</Text>. Please refer to the <Text style={styles.disclaimerModified}>latest</Text> code, sent to you by email.
                         </Text>
                     </View>
                 </View>
