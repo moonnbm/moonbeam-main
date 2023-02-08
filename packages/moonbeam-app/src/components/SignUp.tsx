@@ -396,6 +396,7 @@ export const SignUpComponent = ({navigation, route}: SignUpProps) => {
                                 <Text style={styles.errorMessageMain}>Please fill out the information below!</Text>}
                             <TextInput
                                 onChangeText={(value) => {
+                                    setIsEmailFocus(true);
                                     setProgressStepsContactError(false);
                                     setEmail(value);
                                 }}
@@ -415,6 +416,7 @@ export const SignUpComponent = ({navigation, route}: SignUpProps) => {
 
                             <TextInput
                                 onChangeText={(value) => {
+                                    setIsNameFocus(true);
                                     setProgressStepsContactError(false);
                                     setName(value);
                                 }}
@@ -434,6 +436,7 @@ export const SignUpComponent = ({navigation, route}: SignUpProps) => {
 
                             <TextInput
                                 onChangeText={(value) => {
+                                    setIsBirthDateFocus(true);
                                     setProgressStepsContactError(false);
                                     setBirthDate(value);
                                 }}
@@ -514,6 +517,7 @@ export const SignUpComponent = ({navigation, route}: SignUpProps) => {
 
                             <TextInput
                                 onChangeText={(value) => {
+                                    setIsRankFocus(true);
                                     setProgressStepsMilitaryError(false);
                                     setRank(value);
                                 }}
@@ -533,6 +537,7 @@ export const SignUpComponent = ({navigation, route}: SignUpProps) => {
 
                             <TextInput
                                 onChangeText={(value) => {
+                                    setIsDutyStationFocus(true);
                                     setProgressStepsMilitaryError(false);
                                     setDutyStation(value);
                                 }}
@@ -570,6 +575,7 @@ export const SignUpComponent = ({navigation, route}: SignUpProps) => {
                                 <Text style={styles.errorMessageMain}>Please fill out the information below!</Text>}
                             <TextInput
                                 onChangeText={(value) => {
+                                    setIsPasswordFocus(true);
                                     setProgressStepsSecurityError(false);
                                     setPassword(value);
                                 }}
@@ -592,6 +598,7 @@ export const SignUpComponent = ({navigation, route}: SignUpProps) => {
 
                             <TextInput
                                 onChangeText={(value) => {
+                                    setIsConfirmPasswordFocus(true);
                                     setProgressStepsSecurityError(false);
                                     setConfirmPassword(value);
                                 }}
@@ -614,6 +621,7 @@ export const SignUpComponent = ({navigation, route}: SignUpProps) => {
 
                             <TextInput
                                 onChangeText={(value) => {
+                                    setIsPhoneFocus(true);
                                     setProgressStepsSecurityError(false);
                                     setPhoneNumber(value);
                                 }}

@@ -118,7 +118,7 @@ export const ForgotPassword = ({navigation, route}: ForgotPasswordProps) => {
                 // this is done because the in-built library for emails, does not fully work properly
                 if (isFieldInError('code') || !/^\d{6,6}$/.test(code)) {
                     setProgressStepsErrors(true);
-                    setCodeErrors([...getErrorsInField('code'), "Invalid verification code."]);
+                    setCodeErrors([...getErrorsInField('code'), "Invalid verification code format (######)."]);
                 } else {
                     setProgressStepsErrors(false);
                     setCodeErrors([]);
@@ -270,7 +270,7 @@ export const ForgotPassword = ({navigation, route}: ForgotPasswordProps) => {
                                         const codeRetrievedFlag = await passwordCodeRetrieval(email);
                                         if (codeRetrievedFlag) {
                                             setProfileStepProgressError(false);
-                                            setResetPasswordDisclaimerShown(true);
+                                            setResetPasswordShown(true);
                                             setProgressStepsErrors(false);
                                         } else {
                                             setProgressStepsErrors(true);
@@ -284,6 +284,7 @@ export const ForgotPassword = ({navigation, route}: ForgotPasswordProps) => {
                                 <Text style={styles.errorMessageMain}>Please fill out the information below!</Text>}
                             <TextInput
                                 onChangeText={(value) => {
+                                    setIsEmailFocus(true);
                                     setProfileStepProgressError(false);
                                     setEmail(value);
                                 }}
@@ -305,7 +306,7 @@ export const ForgotPassword = ({navigation, route}: ForgotPasswordProps) => {
                         <ProgressStep
                             // note do not enable this unless we need more space for content
                             scrollable={false}
-                            label="Verification"
+                            label="New Password"
                             nextBtnStyle={styles.nextBtnStyle}
                             nextBtnTextStyle={styles.btnStyleText}
                             nextBtnText={"Next"}
@@ -313,69 +314,33 @@ export const ForgotPassword = ({navigation, route}: ForgotPasswordProps) => {
                             previousBtnStyle={styles.prevBtnStyle}
                             previousBtnTextStyle={styles.btnStyleText}
                             onNext={() => {
-                                if (code === "") {
-                                    setCodeVerificationStepProgressError(true);
+                                if (password === "" || confirmPassword === "") {
+                                    setPwResetStepProgressError(true);
                                     setProgressStepsErrors(true);
                                 } else {
-                                    if (codeErrors.length !== 0) {
+                                    fieldValidation("password");
+                                    fieldValidation("confirmPassword");
+                                    if (passwordErrors.length !== 0 || confirmPasswordErrors.length !== 0) {
                                         setProgressStepsErrors(true);
-                                    } else if (codeErrors.length === 0) {
-                                        setCodeVerificationStepProgressError(false);
-                                        setResetPasswordShown(true);
-                                        setResetPasswordDisclaimerShown(false);
+                                    } else {
+                                        setPwResetStepProgressError(false);
                                         setProgressStepsErrors(false);
+                                        setIsPasswordShown(false);
+                                        setResetPasswordDisclaimerShown(true);
                                     }
                                 }
                             }}
                             errors={progressStepsErrors}
                             onPrevious={() => {
-                                setCodeVerificationStepProgressError(false);
-                                setResetPasswordDisclaimerShown(false);
-                            }}>
-                            <Text style={styles.codeVerificationProgressTitle}>Code Verification</Text>
-                            {codeVerificationStepProgressError &&
-                                <Text style={styles.errorMessageMain}>Please fill out the information below!</Text>}
-                            <TextInput
-                                onChangeText={(value) => {
-                                    setCodeVerificationStepProgressError(false);
-                                    setCode(value);
-                                }}
-                                value={code}
-                                style={codeFocus ? styles.initialTextInputFocus : styles.initialTextInput}
-                                onFocus={() => {
-                                    setIsCodeFocus(true);
-                                }}
-                                label="Verification Code"
-                                textColor={"#313030"}
-                                underlineColor={"#f2f2f2"}
-                                activeUnderlineColor={"#313030"}
-                                left={<TextInput.Icon icon="dialpad" iconColor="#313030"/>}
-                            />
-                            {(codeErrors.length > 0 && !codeVerificationStepProgressError) ?
-                                <Text style={styles.errorMessage}>{codeErrors[0]}</Text> : <></>}
-                        </ProgressStep>
-
-                        <ProgressStep
-                            // note do not enable this unless we need more space for content
-                            scrollable={false}
-                            label="New Password"
-                            nextBtnStyle={styles.nextBtnStyle}
-                            nextBtnTextStyle={styles.btnStyleText}
-                            finishBtnText={""}
-                            previousBtnText={"Back"}
-                            previousBtnStyle={styles.lastPrevBtnStyle}
-                            previousBtnTextStyle={styles.btnStyleText}
-                            errors={progressStepsErrors}
-                            onPrevious={() => {
                                 setPwResetStepProgressError(false);
                                 setResetPasswordShown(false);
-                                setResetPasswordDisclaimerShown(true);
                             }}>
                             <Text style={styles.pwResetProgressTitle}>New Password Information</Text>
                             {pwResetStepProgressError &&
                                 <Text style={styles.errorMessageMain}>Please fill out the information below!</Text>}
                             <TextInput
                                 onChangeText={(value) => {
+                                    setIsPasswordFocus(true);
                                     setPwResetStepProgressError(false);
                                     setPassword(value);
                                 }}
@@ -398,6 +363,7 @@ export const ForgotPassword = ({navigation, route}: ForgotPasswordProps) => {
 
                             <TextInput
                                 onChangeText={(value) => {
+                                    setIsConfirmPasswordFocus(true);
                                     setPwResetStepProgressError(false);
                                     setConfirmPassword(value);
                                 }}
@@ -418,10 +384,50 @@ export const ForgotPassword = ({navigation, route}: ForgotPasswordProps) => {
                             {(confirmPasswordErrors.length > 0 && !pwResetStepProgressError) ?
                                 <Text style={styles.errorMessage}>{confirmPasswordErrors[0]}</Text> : <></>}
                         </ProgressStep>
+
+                        <ProgressStep
+                            // note do not enable this unless we need more space for content
+                            scrollable={false}
+                            label="Verification"
+                            nextBtnStyle={styles.nextBtnStyle}
+                            nextBtnTextStyle={styles.btnStyleText}
+                            finishBtnText={""}
+                            previousBtnText={"Back"}
+                            previousBtnStyle={styles.lastPrevBtnStyle}
+                            previousBtnTextStyle={styles.btnStyleText}
+                            errors={progressStepsErrors}
+                            onPrevious={() => {
+                                setCodeVerificationStepProgressError(false);
+                                setResetPasswordDisclaimerShown(false);
+                                setIsPasswordShown(true);
+                            }}>
+                            <Text style={styles.codeVerificationProgressTitle}>Code Verification</Text>
+                            {codeVerificationStepProgressError &&
+                                <Text style={styles.errorMessageMain}>Please fill out the information below!</Text>}
+                            <TextInput
+                                onChangeText={(value) => {
+                                    setIsCodeFocus(true);
+                                    setCodeVerificationStepProgressError(false);
+                                    setCode(value);
+                                }}
+                                value={code}
+                                style={codeFocus ? styles.initialTextInputFocus : styles.initialTextInput}
+                                onFocus={() => {
+                                    setIsCodeFocus(true);
+                                }}
+                                label="Verification Code"
+                                textColor={"#313030"}
+                                underlineColor={"#f2f2f2"}
+                                activeUnderlineColor={"#313030"}
+                                left={<TextInput.Icon icon="dialpad" iconColor="#313030"/>}
+                            />
+                            {(codeErrors.length > 0 && !codeVerificationStepProgressError) ?
+                                <Text style={styles.errorMessage}>{codeErrors[0]}</Text> : <></>}
+                        </ProgressStep>
                     </ProgressSteps>
                 </View>
                 <View style={[styles.bottomView, !resetPasswordShown && {marginBottom: '30%'}]}>
-                    {resetPasswordShown &&
+                    {resetPasswordDisclaimerShown &&
                         <Button
                             style={styles.resetPasswordButton}
                             textColor={"#f2f2f2"}
@@ -429,16 +435,15 @@ export const ForgotPassword = ({navigation, route}: ForgotPasswordProps) => {
                             mode="outlined"
                             labelStyle={{fontSize: 18}}
                             onPress={() => {
-                                if (password === "" || confirmPassword === "") {
-                                    setPwResetStepProgressError(true);
+                                if (code === "") {
+                                    setCodeVerificationStepProgressError(true);
                                     setProgressStepsErrors(true);
                                 } else {
-                                    fieldValidation("password");
-                                    fieldValidation("confirmPassword");
-                                    if (passwordErrors.length !== 0 || confirmPasswordErrors.length !== 0) {
+                                    fieldValidation("code");
+                                    if (codeErrors.length !== 0) {
                                         setProgressStepsErrors(true);
-                                    } else {
-                                        setPwResetStepProgressError(false);
+                                    } else if (codeErrors.length === 0) {
+                                        setCodeVerificationStepProgressError(false);
                                         setProgressStepsErrors(false);
                                         passwordReset(email, password, code);
                                     }
