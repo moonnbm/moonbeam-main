@@ -1,5 +1,5 @@
 import React, {useEffect, useState} from "react";
-import {Image, ImageBackground, KeyboardAvoidingView, Platform, View} from "react-native";
+import {Image, ImageBackground, View} from "react-native";
 import {ForgotPasswordProps} from "../models/PageProps";
 import {commonStyles} from "../styles/common.module";
 // @ts-ignore
@@ -11,6 +11,7 @@ import {useValidation} from 'react-native-form-validator';
 // @ts-ignore
 import ForgotPasswordLogo from '../../assets/login-logo.png';
 import {Auth} from 'aws-amplify';
+import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
 
 /**
  * Email Verification component.
@@ -228,10 +229,8 @@ export const ForgotPassword = ({navigation, route}: ForgotPasswordProps) => {
                     </Button>
                 </Modal>
             </Portal>
-            <KeyboardAvoidingView
-                behavior={Platform.OS == 'ios' ? 'height' : 'height'}
-                keyboardVerticalOffset={Platform.OS == 'ios' ? -350 : -130}
-                style={commonStyles.container}>
+            <KeyboardAwareScrollView
+                contentContainerStyle={commonStyles.container}>
                 <View style={[commonStyles.container, {marginTop: '35%'}]}>
                     <View>
                         <Text style={styles.forgotPasswordTitle}>
@@ -282,8 +281,9 @@ export const ForgotPassword = ({navigation, route}: ForgotPasswordProps) => {
                             <Text style={styles.usernameProgressTitle}>Username Information</Text>
                             {profileStepProgressError &&
                                 <Text style={styles.errorMessageMain}>Please fill out the information below!</Text>}
+                            {/* @ts-ignore */}
                             <TextInput
-                                onChangeText={(value) => {
+                                onChangeText={(value: React.SetStateAction<string>) => {
                                     setIsEmailFocus(true);
                                     setProfileStepProgressError(false);
                                     setEmail(value);
@@ -338,8 +338,9 @@ export const ForgotPassword = ({navigation, route}: ForgotPasswordProps) => {
                             <Text style={styles.pwResetProgressTitle}>New Password Information</Text>
                             {pwResetStepProgressError &&
                                 <Text style={styles.errorMessageMain}>Please fill out the information below!</Text>}
+                            {/* @ts-ignore */}
                             <TextInput
-                                onChangeText={(value) => {
+                                onChangeText={(value: React.SetStateAction<string>) => {
                                     setIsPasswordFocus(true);
                                     setPwResetStepProgressError(false);
                                     setPassword(value);
@@ -360,9 +361,9 @@ export const ForgotPassword = ({navigation, route}: ForgotPasswordProps) => {
                             />
                             {(passwordErrors.length > 0 && !pwResetStepProgressError) ?
                                 <Text style={styles.errorMessage}>{passwordErrors[0]}</Text> : <></>}
-
+                            {/* @ts-ignore */}
                             <TextInput
-                                onChangeText={(value) => {
+                                onChangeText={(value: React.SetStateAction<string>) => {
                                     setIsConfirmPasswordFocus(true);
                                     setPwResetStepProgressError(false);
                                     setConfirmPassword(value);
@@ -404,8 +405,9 @@ export const ForgotPassword = ({navigation, route}: ForgotPasswordProps) => {
                             <Text style={styles.codeVerificationProgressTitle}>Code Verification</Text>
                             {codeVerificationStepProgressError &&
                                 <Text style={styles.errorMessageMain}>Please fill out the information below!</Text>}
+                            {/* @ts-ignore */}
                             <TextInput
-                                onChangeText={(value) => {
+                                onChangeText={(value: React.SetStateAction<string>) => {
                                     setIsCodeFocus(true);
                                     setCodeVerificationStepProgressError(false);
                                     setCode(value);
@@ -461,7 +463,7 @@ export const ForgotPassword = ({navigation, route}: ForgotPasswordProps) => {
                               }}> Sign in</Text>
                     </Text>
                 </View>
-            </KeyboardAvoidingView>
+            </KeyboardAwareScrollView>
         </ImageBackground>
     );
 }

@@ -1,12 +1,13 @@
 import React, {useEffect, useState} from "react";
 import {EmailVerifyProps} from "../models/PageProps";
-import {Image, ImageBackground, KeyboardAvoidingView, Platform, Text, View} from "react-native";
+import {Image, ImageBackground, Text, View} from "react-native";
 import {commonStyles} from "../styles/common.module";
 import {styles} from "../styles/emailVerify.module";
 // @ts-ignore
 import CongratulationsSplash from '../../assets/congratulations.png';
 import {Button, Modal, Portal, TextInput} from "react-native-paper";
 import {Auth} from "aws-amplify";
+import {KeyboardAwareScrollView} from "react-native-keyboard-aware-scroll-view";
 
 /**
  * Email Verification component.
@@ -107,10 +108,8 @@ export const EmailVerify = ({navigation, route}: EmailVerifyProps) => {
                     </Button>
                 </Modal>
             </Portal>
-            <KeyboardAvoidingView
-                behavior={Platform.OS == 'ios' ? 'height' : 'height'}
-                keyboardVerticalOffset={Platform.OS == 'ios' ? -350 : -130}
-                style={commonStyles.container}>
+            <KeyboardAwareScrollView
+                contentContainerStyle={commonStyles.container}>
                 <View style={styles.mainView}>
                     <View style={styles.topView}>
                         <Image source={CongratulationsSplash} style={styles.congratulationsSplash}/>
@@ -119,8 +118,9 @@ export const EmailVerify = ({navigation, route}: EmailVerifyProps) => {
                         <Text style={styles.emailVerifyTitle}>Congratulations</Text>
                         <Text style={styles.emailVerifySubtitle}>Verify your email to login</Text>
                     </View>
+                    {/* @ts-ignore */}
                     <TextInput
-                        onChangeText={(value) => {
+                        onChangeText={(value: React.SetStateAction<string>) => {
                             setCode(value);
                         }}
                         value={code}
@@ -162,11 +162,12 @@ export const EmailVerify = ({navigation, route}: EmailVerifyProps) => {
                     </View>
                     <View style={styles.disclaimerView}>
                         <Text style={styles.disclaimerText}>
-                            Verification codes will <Text style={styles.disclaimerModified}>expire</Text>. Please refer to the <Text style={styles.disclaimerModified}>latest</Text> code, sent to you by email.
+                            Verification codes will <Text style={styles.disclaimerModified}>expire</Text>. Please refer
+                            to the <Text style={styles.disclaimerModified}>latest</Text> code, sent to you by email.
                         </Text>
                     </View>
                 </View>
-            </KeyboardAvoidingView>
+            </KeyboardAwareScrollView>
         </ImageBackground>
     );
 };

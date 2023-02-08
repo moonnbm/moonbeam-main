@@ -1,5 +1,5 @@
 import React, {useEffect, useState} from "react";
-import {ImageBackground, KeyboardAvoidingView, Platform, Text, View} from "react-native";
+import {ImageBackground, Text, View} from "react-native";
 import {SignUpProps} from "../models/PageProps";
 import {commonStyles} from '../styles/common.module';
 import {styles} from '../styles/signUp.module';
@@ -13,6 +13,7 @@ import dayjs from 'dayjs';
 import {useValidation} from 'react-native-form-validator';
 import moment from 'moment';
 import {Auth} from 'aws-amplify';
+import {KeyboardAwareScrollView} from "react-native-keyboard-aware-scroll-view";
 
 /**
  * Sign Up component.
@@ -333,7 +334,8 @@ export const SignUpComponent = ({navigation, route}: SignUpProps) => {
             style={commonStyles.image}
             source={require('../../assets/signup-background.png')}>
             <Portal>
-                <Modal dismissable={false} visible={modalVisible} onDismiss={() => setModalVisible(false)} contentContainerStyle={styles.modalContainer}>
+                <Modal dismissable={false} visible={modalVisible} onDismiss={() => setModalVisible(false)}
+                       contentContainerStyle={styles.modalContainer}>
                     <Text style={styles.modalParagraph}>{modalError}</Text>
                     <Button
                         style={styles.modalButton}
@@ -342,15 +344,15 @@ export const SignUpComponent = ({navigation, route}: SignUpProps) => {
                         buttonColor={"#f2f2f2"}
                         mode="outlined"
                         labelStyle={{fontSize: 15}}
-                        onPress={() => {setModalVisible(false)}}>
+                        onPress={() => {
+                            setModalVisible(false)
+                        }}>
                         Try Again
                     </Button>
                 </Modal>
             </Portal>
-            <KeyboardAvoidingView
-                behavior={Platform.OS == 'ios' ? 'position' : 'height'}
-                keyboardVerticalOffset={Platform.OS == 'ios' ? -230 : 100}
-                style={commonStyles.container}>
+            <KeyboardAwareScrollView
+                contentContainerStyle={commonStyles.container}>
                 <View style={[commonStyles.container, {marginTop: '30%'}]}>
                     <View>
                         <Text style={styles.signupTitle}>Welcome</Text>
@@ -394,8 +396,9 @@ export const SignUpComponent = ({navigation, route}: SignUpProps) => {
                             <Text style={styles.contactProgressTitle}>Contact Information</Text>
                             {progressStepsContactError &&
                                 <Text style={styles.errorMessageMain}>Please fill out the information below!</Text>}
+                            {/* @ts-ignore */}
                             <TextInput
-                                onChangeText={(value) => {
+                                onChangeText={(value: React.SetStateAction<string>) => {
                                     setIsEmailFocus(true);
                                     setProgressStepsContactError(false);
                                     setEmail(value);
@@ -413,9 +416,9 @@ export const SignUpComponent = ({navigation, route}: SignUpProps) => {
                             />
                             {(emailErrors.length > 0 && !progressStepsContactError) ?
                                 <Text style={styles.errorMessage}>{emailErrors[0]}</Text> : <></>}
-
+                            {/* @ts-ignore */}
                             <TextInput
-                                onChangeText={(value) => {
+                                onChangeText={(value: React.SetStateAction<string>) => {
                                     setIsNameFocus(true);
                                     setProgressStepsContactError(false);
                                     setName(value);
@@ -433,9 +436,9 @@ export const SignUpComponent = ({navigation, route}: SignUpProps) => {
                             />
                             {(nameErrors.length > 0 && !progressStepsContactError) ?
                                 <Text style={styles.errorMessage}>{nameErrors[0]}</Text> : <></>}
-
+                            {/* @ts-ignore */}
                             <TextInput
-                                onChangeText={(value) => {
+                                onChangeText={(value: React.SetStateAction<string>) => {
                                     setIsBirthDateFocus(true);
                                     setProgressStepsContactError(false);
                                     setBirthDate(value);
@@ -514,9 +517,9 @@ export const SignUpComponent = ({navigation, route}: SignUpProps) => {
                             />
                             {(dutyErrors.length > 0 && !progressStepsMilitaryError) ?
                                 <Text style={styles.errorMessage}>{dutyErrors[0]}</Text> : <></>}
-
+                            {/* @ts-ignore */}
                             <TextInput
-                                onChangeText={(value) => {
+                                onChangeText={(value: React.SetStateAction<string>) => {
                                     setIsRankFocus(true);
                                     setProgressStepsMilitaryError(false);
                                     setRank(value);
@@ -534,9 +537,9 @@ export const SignUpComponent = ({navigation, route}: SignUpProps) => {
                             />
                             {(rankErrors.length > 0 && !progressStepsMilitaryError) ?
                                 <Text style={styles.errorMessage}>{rankErrors[0]}</Text> : <></>}
-
+                            {/* @ts-ignore */}
                             <TextInput
-                                onChangeText={(value) => {
+                                onChangeText={(value: React.SetStateAction<string>) => {
                                     setIsDutyStationFocus(true);
                                     setProgressStepsMilitaryError(false);
                                     setDutyStation(value);
@@ -573,8 +576,9 @@ export const SignUpComponent = ({navigation, route}: SignUpProps) => {
                             <Text style={styles.securityProgressTitle}>Account Security</Text>
                             {progressStepsSecurityError &&
                                 <Text style={styles.errorMessageMain}>Please fill out the information below!</Text>}
+                            {/* @ts-ignore */}
                             <TextInput
-                                onChangeText={(value) => {
+                                onChangeText={(value: React.SetStateAction<string>) => {
                                     setIsPasswordFocus(true);
                                     setProgressStepsSecurityError(false);
                                     setPassword(value);
@@ -595,9 +599,9 @@ export const SignUpComponent = ({navigation, route}: SignUpProps) => {
                             />
                             {(passwordErrors.length > 0 && !progressStepsSecurityError) ?
                                 <Text style={styles.errorMessage}>{passwordErrors[0]}</Text> : <></>}
-
+                            {/* @ts-ignore */}
                             <TextInput
-                                onChangeText={(value) => {
+                                onChangeText={(value: React.SetStateAction<string>) => {
                                     setIsConfirmPasswordFocus(true);
                                     setProgressStepsSecurityError(false);
                                     setConfirmPassword(value);
@@ -612,15 +616,16 @@ export const SignUpComponent = ({navigation, route}: SignUpProps) => {
                                 textColor={"#313030"}
                                 underlineColor={"#f2f2f2"}
                                 activeUnderlineColor={"#313030"}
-                                right={<TextInput.Icon icon="eye" iconColor={confirmPasswordShown ? "#A2B000" : "#313030"}
+                                right={<TextInput.Icon icon="eye"
+                                                       iconColor={confirmPasswordShown ? "#A2B000" : "#313030"}
                                                        onPress={() => setIsConfirmPasswordShown(!confirmPasswordShown)}/>}
                                 left={<TextInput.Icon icon="lock" iconColor="#313030"/>}
                             />
                             {(confirmPasswordErrors.length > 0 && !progressStepsSecurityError) ?
                                 <Text style={styles.errorMessage}>{confirmPasswordErrors[0]}</Text> : <></>}
-
+                            {/* @ts-ignore */}
                             <TextInput
-                                onChangeText={(value) => {
+                                onChangeText={(value: React.SetStateAction<string>) => {
                                     setIsPhoneFocus(true);
                                     setProgressStepsSecurityError(false);
                                     setPhoneNumber(value);
@@ -677,7 +682,7 @@ export const SignUpComponent = ({navigation, route}: SignUpProps) => {
                         </Text>
                     </View>
                 }
-            </KeyboardAvoidingView>
+            </KeyboardAwareScrollView>
         </ImageBackground>
     );
 };

@@ -1,11 +1,12 @@
 import React, {useEffect, useState} from 'react';
-import {Image, ImageBackground, KeyboardAvoidingView, Platform, Text, View} from 'react-native';
+import {Image, ImageBackground, Text, View} from 'react-native';
 import {Button, TextInput} from 'react-native-paper';
 import {styles} from '../styles/signIn.module';
 // @ts-ignore
 import LoginLogo from '../../assets/login-logo.png';
 import {SignInProps} from '../models/PageProps'
 import {commonStyles} from '../styles/common.module';
+import {KeyboardAwareScrollView} from 'react-native-keyboard-aware-scroll-view';
 
 /**
  * Sign In component.
@@ -40,16 +41,15 @@ export const SignInComponent = ({navigation, route}: SignInProps) => {
                 resizeMode: 'contain'
             }}
             source={require('../../assets/login-background.png')}>
-            <KeyboardAvoidingView
-                behavior={Platform.OS == 'ios' ? 'height' : 'height'}
-                keyboardVerticalOffset={Platform.OS == 'ios' ? -150 : -130}
+            <KeyboardAwareScrollView
                 onLayout={route.params.onLayoutRootView}
-                style={commonStyles.container}>
+                contentContainerStyle={commonStyles.container}>
                 <View style={styles.mainView}>
                     <View>
                         <Text style={styles.loginTitle}>Hello</Text>
                         <Text style={styles.loginSubtitle}>Sign in to your account</Text>
                     </View>
+                    {/* @ts-ignore */}
                     <TextInput
                         style={usernameFocus ? styles.textInputFocus : styles.textInput}
                         onFocus={() => {
@@ -61,6 +61,7 @@ export const SignInComponent = ({navigation, route}: SignInProps) => {
                         activeUnderlineColor={"#313030"}
                         left={<TextInput.Icon icon="email" iconColor="#313030"/>}
                     />
+                    {/* @ts-ignore */}
                     <TextInput
                         style={passwordFocus ? styles.textInputFocus : styles.textInput}
                         onFocus={() => {
@@ -82,7 +83,7 @@ export const SignInComponent = ({navigation, route}: SignInProps) => {
                         </Text>
                     </View>
                     <Button
-                        onPress={(_) => onSignInPressed()}
+                        onPress={() => onSignInPressed()}
                         style={styles.signInFooterButton}
                         textColor={"#f2f2f2"}
                         buttonColor={"#2A3779"}
@@ -100,7 +101,7 @@ export const SignInComponent = ({navigation, route}: SignInProps) => {
                         </Text>
                     </View>
                 </View>
-            </KeyboardAvoidingView>
+            </KeyboardAwareScrollView>
         </ImageBackground>
     );
 };
