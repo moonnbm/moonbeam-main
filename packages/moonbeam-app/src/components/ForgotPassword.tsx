@@ -59,6 +59,11 @@ export const ForgotPassword = ({navigation, route}: ForgotPasswordProps) => {
             }
             email === "" && setEmailErrors([]);
 
+            if (codeFocus && code !== "") {
+                fieldValidation("code");
+            }
+            code === "" && setCodeErrors([]);
+
             if (passwordFocus && password !== "") {
                 fieldValidation("password");
             }
@@ -71,6 +76,7 @@ export const ForgotPassword = ({navigation, route}: ForgotPasswordProps) => {
             setIsInitialRender(false);
         }
     }, [email, emailFocus,
+        code, codeFocus,
         password, passwordFocus,
         confirmPassword, confirmPasswordFocus]);
 
@@ -79,6 +85,7 @@ export const ForgotPassword = ({navigation, route}: ForgotPasswordProps) => {
         useValidation({
             state: {
                 email: email,
+                code: code,
                 password: password,
                 confirmPassword: confirmPassword
             },
@@ -102,6 +109,19 @@ export const ForgotPassword = ({navigation, route}: ForgotPasswordProps) => {
                 } else {
                     setProgressStepsErrors(false);
                     setEmailErrors([]);
+                }
+                break;
+            case 'code':
+                validate({
+                    ...({[fieldName]: {minLength: 6, maxLength: 6, required: true}}),
+                });
+                // this is done because the in-built library for emails, does not fully work properly
+                if (isFieldInError('code') || !/^\d{6,6}$/.test(code)) {
+                    setProgressStepsErrors(true);
+                    setCodeErrors([...getErrorsInField('code'), "Invalid verification code."]);
+                } else {
+                    setProgressStepsErrors(false);
+                    setCodeErrors([]);
                 }
                 break;
             case 'password':
