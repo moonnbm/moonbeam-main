@@ -11,7 +11,7 @@ export const styles = StyleSheet.create({
         fontSize: 20
     },
     usernameProgressTitle: {
-        marginLeft: '15%',
+        marginLeft: '22%',
         marginTop: '5%',
         fontFamily: 'Raleway-Regular',
         fontSize: 25,
@@ -19,13 +19,6 @@ export const styles = StyleSheet.create({
     },
     codeVerificationProgressTitle: {
         marginLeft: '22%',
-        marginTop: '5%',
-        fontFamily: 'Raleway-Regular',
-        fontSize: 25,
-        color: '#2A3779',
-    },
-    pwResetProgressTitle: {
-        marginLeft: '8%',
         marginTop: '5%',
         fontFamily: 'Raleway-Regular',
         fontSize: 25,
@@ -82,7 +75,7 @@ export const styles = StyleSheet.create({
         width: 300
     },
     bottomView: {
-        marginBottom: '6%',
+        marginBottom: '15%',
         justifyContent: 'center',
         alignItems: 'center'
     },

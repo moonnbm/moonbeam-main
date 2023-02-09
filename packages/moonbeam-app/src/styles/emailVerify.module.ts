@@ -118,5 +118,18 @@ export const styles = StyleSheet.create({
         width: 350,
         marginTop: '3%',
         textAlign: 'center'
+    },
+    errorMessageMain: {
+        alignSelf: 'center',
+        fontFamily: 'Raleway-Bold',
+        fontSize: 12,
+        color: 'red'
+    },
+    errorMessage: {
+        width: 350,
+        marginTop: 5,
+        fontFamily: 'Raleway-Bold',
+        fontSize: 12,
+        color: 'red'
     }
 });

@@ -73,5 +73,18 @@ export const styles = StyleSheet.create({
     },
     bottomView: {
         marginTop: '15%'
+    },
+    errorMessageMain: {
+        alignSelf: 'center',
+        fontFamily: 'Raleway-Bold',
+        fontSize: 12,
+        color: 'red'
+    },
+    errorMessage: {
+        width: 350,
+        marginTop: 5,
+        fontFamily: 'Raleway-Bold',
+        fontSize: 12,
+        color: 'red'
     }
 });

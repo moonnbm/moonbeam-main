@@ -2,6 +2,17 @@ import {StyleSheet} from "react-native";
 
 // styles to be used within the SignUp component
 export const styles = StyleSheet.create({
+    container: {
+        flex: 1,
+        flexDirection: 'row',
+        flexWrap: 'wrap',
+        alignItems: 'center',
+        justifyContent: 'center'
+    },
+    keyboardScrollViewContainer: {
+        alignItems: 'center',
+        justifyContent: 'center'
+    },
     signupTitle: {
         fontFamily: 'Raleway-Medium',
         fontSize: 39,
@@ -54,12 +65,8 @@ export const styles = StyleSheet.create({
         shadowRadius: 8,
         elevation: 8
     },
-    initialNextBtnStyle: {
-        paddingRight: 90
-    },
-    lastPrevBtnStyle: {
-        paddingLeft: 90
-    },
+    initialNextBtnStyle: {},
+    lastPrevBtnStyle: {},
     nextBtnStyle: {},
     prevBtnStyle: {},
     btnStyleText: {
@@ -68,21 +75,18 @@ export const styles = StyleSheet.create({
         fontSize: 20
     },
     contactProgressTitle: {
-        marginLeft: '18%',
         marginTop: '5%',
         fontFamily: 'Raleway-Regular',
         fontSize: 25,
         color: '#2A3779',
     },
     militaryProgressTitle: {
-        marginLeft: '19%',
         marginTop: '5%',
         fontFamily: 'Raleway-Regular',
         fontSize: 25,
         color: '#2A3779',
     },
     securityProgressTitle: {
-        marginLeft: '23%',
         marginTop: '5%',
         fontFamily: 'Raleway-Regular',
         fontSize: 25,
@@ -90,6 +94,7 @@ export const styles = StyleSheet.create({
     },
     initialDropdownPicker: {
         marginTop: 10,
+        alignSelf: 'center',
         width: 350,
         height: 70,
         backgroundColor: '#f2f2f2',
@@ -114,7 +119,9 @@ export const styles = StyleSheet.create({
     },
     dropdownContainer: {
         backgroundColor: "#f2f2f2",
-        borderColor: "lightgrey"
+        borderColor: "lightgrey",
+        width: 350,
+        alignSelf: 'center'
     },
     signUpView: {
         marginBottom: '10%'
@@ -181,5 +188,10 @@ export const styles = StyleSheet.create({
         height: 40,
         width: 350,
         marginTop: '10%'
+    },
+    progressStepView: {
+        alignItems: 'center',
+        alignSelf: 'center',
+        width: 450,
     }
 });

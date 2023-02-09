@@ -1,6 +1,6 @@
 import React, {useEffect, useState} from "react";
 import {Image, ImageBackground, View} from "react-native";
-import {ForgotPasswordProps} from "../models/PageProps";
+import {ForgotPasswordProps} from "../models/RootProps";
 import {commonStyles} from "../styles/common.module";
 // @ts-ignore
 import {ProgressStep, ProgressSteps} from 'react-native-progress-steps';
@@ -14,13 +14,12 @@ import {Auth} from 'aws-amplify';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
 
 /**
- * Email Verification component.
+ * Forgot Password component.
  */
 export const ForgotPassword = ({navigation, route}: ForgotPasswordProps) => {
     // state driven key-value pairs for UI related elements
     const [emailFocus, setIsEmailFocus] = useState<boolean>(false);
     const [isInitialRender, setIsInitialRender] = useState<boolean>(route.params.initialRender);
-    const [resetPasswordShown, setResetPasswordShown] = useState<boolean>(false);
     const [resetPasswordDisclaimerShown, setResetPasswordDisclaimerShown] = useState<boolean>(false);
     const [passwordFocus, setIsPasswordFocus] = useState<boolean>(false);
     const [confirmPasswordFocus, setIsConfirmPasswordFocus] = useState<boolean>(false);
@@ -30,7 +29,6 @@ export const ForgotPassword = ({navigation, route}: ForgotPasswordProps) => {
     const [isErrorModal, setIsErrorModal] = useState<boolean>(false);
     // state driven key-value pairs for forgot password form values
     const [profileStepProgressError, setProfileStepProgressError] = useState<boolean>(false);
-    const [pwResetStepProgressError, setPwResetStepProgressError] = useState<boolean>(false);
     const [codeVerificationStepProgressError, setCodeVerificationStepProgressError] = useState<boolean>(false);
     const [email, setEmail] = useState<string>("");
     const [emailErrors, setEmailErrors] = useState<any[]>([]);
@@ -170,7 +168,7 @@ export const ForgotPassword = ({navigation, route}: ForgotPasswordProps) => {
         } catch (error) {
             console.log(`Unexpected error while confirming identity: ${error}`);
             // @ts-ignore
-            setEmailErrors([error.message]);
+            setConfirmPasswordErrors([error.message]);
             return false;
         }
     };
@@ -223,7 +221,7 @@ export const ForgotPassword = ({navigation, route}: ForgotPasswordProps) => {
                         mode="outlined"
                         labelStyle={{fontSize: 15}}
                         onPress={() => {
-                            isErrorModal ? setModalVisible(false) : navigation.navigate('SignIn', {})
+                            isErrorModal ? setModalVisible(false) : navigation.navigate('SignIn', {initialRender: true})
                         }}>
                         {isErrorModal ? `Try Again` : `Sign In`}
                     </Button>
@@ -234,10 +232,10 @@ export const ForgotPassword = ({navigation, route}: ForgotPasswordProps) => {
                 <View style={[commonStyles.container, {marginTop: '35%'}]}>
                     <View>
                         <Text style={styles.forgotPasswordTitle}>
-                            {resetPasswordDisclaimerShown ? 'Great' : (!resetPasswordShown ? 'Welcome' : 'Thanks') }
+                            {resetPasswordDisclaimerShown ? 'Great' : 'Welcome' }
                         </Text>
                         <Text style={styles.forgotPasswordSubtitle}>
-                            {resetPasswordDisclaimerShown ? 'We just sent you a code' : (!resetPasswordShown ? 'Let\'s reset your password': 'Input your new password') }
+                            {resetPasswordDisclaimerShown ? 'We just sent a code via email' : 'Input your new password'}
                         </Text>
                     </View>
                     <ProgressSteps
@@ -254,31 +252,36 @@ export const ForgotPassword = ({navigation, route}: ForgotPasswordProps) => {
                         <ProgressStep
                             // note do not enable this unless we need more space for content
                             scrollable={false}
-                            label="Username"
+                            label="Profile"
                             nextBtnStyle={styles.initialNextBtnStyle}
                             nextBtnTextStyle={styles.btnStyleText}
                             onNext={async () => {
-                                if (email === "") {
+                                if (email === "" || password === "" || confirmPassword === "") {
                                     setProfileStepProgressError(true);
                                     setProgressStepsErrors(true);
                                 } else {
                                     fieldValidation("email");
-                                    if (emailErrors.length !== 0) {
+                                    fieldValidation("password");
+                                    fieldValidation("confirmPassword");
+                                    if (emailErrors.length !== 0 || passwordErrors.length !== 0 || confirmPasswordErrors.length !== 0) {
                                         setProgressStepsErrors(true);
-                                    } else if (emailErrors.length === 0) {
+                                    } else if (emailErrors.length === 0 || passwordErrors.length === 0 || confirmPasswordErrors.length === 0) {
                                         const codeRetrievedFlag = await passwordCodeRetrieval(email);
-                                        if (codeRetrievedFlag) {
-                                            setProfileStepProgressError(false);
-                                            setResetPasswordShown(true);
-                                            setProgressStepsErrors(false);
-                                        } else {
+                                        console.log('HERE' + codeRetrievedFlag);
+                                        if (!codeRetrievedFlag) {
                                             setProgressStepsErrors(true);
+                                        } else {
+                                            setProfileStepProgressError(false);
+                                            setProgressStepsErrors(false);
+                                            setIsPasswordShown(false);
+                                            setIsConfirmPasswordShown(false);
+                                            setResetPasswordDisclaimerShown(true);
                                         }
                                     }
                                 }
                             }}
                             errors={progressStepsErrors}>
-                            <Text style={styles.usernameProgressTitle}>Username Information</Text>
+                            <Text style={styles.usernameProgressTitle}>Profile Information</Text>
                             {profileStepProgressError &&
                                 <Text style={styles.errorMessageMain}>Please fill out the information below!</Text>}
                             {/* @ts-ignore */}
@@ -301,52 +304,16 @@ export const ForgotPassword = ({navigation, route}: ForgotPasswordProps) => {
                             />
                             {(emailErrors.length > 0 && !profileStepProgressError) ?
                                 <Text style={styles.errorMessage}>{emailErrors[0]}</Text> : <></>}
-                        </ProgressStep>
 
-                        <ProgressStep
-                            // note do not enable this unless we need more space for content
-                            scrollable={false}
-                            label="New Password"
-                            nextBtnStyle={styles.nextBtnStyle}
-                            nextBtnTextStyle={styles.btnStyleText}
-                            nextBtnText={"Next"}
-                            previousBtnText={"Back"}
-                            previousBtnStyle={styles.prevBtnStyle}
-                            previousBtnTextStyle={styles.btnStyleText}
-                            onNext={() => {
-                                if (password === "" || confirmPassword === "") {
-                                    setPwResetStepProgressError(true);
-                                    setProgressStepsErrors(true);
-                                } else {
-                                    fieldValidation("password");
-                                    fieldValidation("confirmPassword");
-                                    if (passwordErrors.length !== 0 || confirmPasswordErrors.length !== 0) {
-                                        setProgressStepsErrors(true);
-                                    } else {
-                                        setPwResetStepProgressError(false);
-                                        setProgressStepsErrors(false);
-                                        setIsPasswordShown(false);
-                                        setResetPasswordDisclaimerShown(true);
-                                    }
-                                }
-                            }}
-                            errors={progressStepsErrors}
-                            onPrevious={() => {
-                                setPwResetStepProgressError(false);
-                                setResetPasswordShown(false);
-                            }}>
-                            <Text style={styles.pwResetProgressTitle}>New Password Information</Text>
-                            {pwResetStepProgressError &&
-                                <Text style={styles.errorMessageMain}>Please fill out the information below!</Text>}
                             {/* @ts-ignore */}
                             <TextInput
                                 onChangeText={(value: React.SetStateAction<string>) => {
                                     setIsPasswordFocus(true);
-                                    setPwResetStepProgressError(false);
+                                    setProfileStepProgressError(false);
                                     setPassword(value);
                                 }}
                                 value={password}
-                                style={passwordFocus ? styles.initialTextInputFocus : styles.initialTextInput}
+                                style={passwordFocus ? styles.textInputFocus : styles.textInput}
                                 onFocus={() => {
                                     setIsPasswordFocus(true);
                                 }}
@@ -359,13 +326,13 @@ export const ForgotPassword = ({navigation, route}: ForgotPasswordProps) => {
                                                        onPress={() => setIsPasswordShown(!passwordShown)}/>}
                                 left={<TextInput.Icon icon="lock" iconColor="#313030"/>}
                             />
-                            {(passwordErrors.length > 0 && !pwResetStepProgressError) ?
+                            {(passwordErrors.length > 0 && !profileStepProgressError) ?
                                 <Text style={styles.errorMessage}>{passwordErrors[0]}</Text> : <></>}
                             {/* @ts-ignore */}
                             <TextInput
                                 onChangeText={(value: React.SetStateAction<string>) => {
                                     setIsConfirmPasswordFocus(true);
-                                    setPwResetStepProgressError(false);
+                                    setProfileStepProgressError(false);
                                     setConfirmPassword(value);
                                 }}
                                 value={confirmPassword}
@@ -382,7 +349,7 @@ export const ForgotPassword = ({navigation, route}: ForgotPasswordProps) => {
                                                        onPress={() => setIsConfirmPasswordShown(!confirmPasswordShown)}/>}
                                 left={<TextInput.Icon icon="lock" iconColor="#313030"/>}
                             />
-                            {(confirmPasswordErrors.length > 0 && !pwResetStepProgressError) ?
+                            {(confirmPasswordErrors.length > 0 && !profileStepProgressError) ?
                                 <Text style={styles.errorMessage}>{confirmPasswordErrors[0]}</Text> : <></>}
                         </ProgressStep>
 
@@ -400,7 +367,6 @@ export const ForgotPassword = ({navigation, route}: ForgotPasswordProps) => {
                             onPrevious={() => {
                                 setCodeVerificationStepProgressError(false);
                                 setResetPasswordDisclaimerShown(false);
-                                setIsPasswordShown(true);
                             }}>
                             <Text style={styles.codeVerificationProgressTitle}>Code Verification</Text>
                             {codeVerificationStepProgressError &&
@@ -428,7 +394,7 @@ export const ForgotPassword = ({navigation, route}: ForgotPasswordProps) => {
                         </ProgressStep>
                     </ProgressSteps>
                 </View>
-                <View style={[styles.bottomView, !resetPasswordShown && {marginBottom: '30%'}]}>
+                <View style={[styles.bottomView, resetPasswordDisclaimerShown && {marginBottom: '30%'}]}>
                     {resetPasswordDisclaimerShown &&
                         <Button
                             style={styles.resetPasswordButton}
@@ -459,7 +425,7 @@ export const ForgotPassword = ({navigation, route}: ForgotPasswordProps) => {
                         Remember your password ?
                         <Text style={styles.forgotPasswordFooterButton}
                               onPress={() => {
-                                  navigation.navigate('SignIn', {})
+                                  navigation.navigate('SignIn', {initialRender: true})
                               }}> Sign in</Text>
                     </Text>
                 </View>

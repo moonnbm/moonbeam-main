@@ -9,9 +9,10 @@ import {Provider as PaperProvider} from 'react-native-paper';
 import {theme} from './src/utils/Theme';
 import {NavigationContainer} from '@react-navigation/native';
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
-import {RootStackParamList} from './src/models/PageProps';
+import {RootStackParamList} from './src/models/RootProps';
 import { EmailVerify } from './src/components/EmailVerify';
 import { ForgotPassword } from './src/components/ForgotPassword';
+import { Dashboard } from './src/components/Dashboard';
 
 // keep the splash screen visible while we fetch resources
 SplashScreen.preventAutoHideAsync();
@@ -82,7 +83,7 @@ export default function App() {
     if (!appIsReady) {
         return null;
     } else {
-        // create a native stack navigator, to be used for our application navigation
+        // create a native stack navigator, to be used for our root application navigation
         const Stack = createNativeStackNavigator<RootStackParamList>();
 
         // return the component for the application
@@ -94,7 +95,7 @@ export default function App() {
                             name="SignIn"
                             component={SignInComponent}
                             options={{headerShown: false}}
-                            initialParams={{onLayoutRootView: onLayoutRootView}}
+                            initialParams={{onLayoutRootView: onLayoutRootView, initialRender: true}}
                         />
                         <Stack.Screen
                             name="SignUp"
@@ -125,6 +126,16 @@ export default function App() {
                                 title: '',
                                 headerBackTitleVisible: false,
                                 headerTintColor: '#2A3779'
+                            }}
+                        />
+                        <Stack.Screen
+                            name="Dashboard"
+                            component={Dashboard}
+                            options={{
+                                headerTransparent: true,
+                                title: '',
+                                headerBackTitleVisible: false,
+                                headerBackVisible: false
                             }}
                         />
                     </Stack.Navigator>
