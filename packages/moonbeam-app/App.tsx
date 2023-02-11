@@ -112,10 +112,7 @@ export default function App() {
                             name="EmailVerify"
                             component={EmailVerify}
                             options={{
-                                headerTransparent: true,
-                                title: '',
-                                headerBackTitleVisible: false,
-                                headerBackVisible: false
+                                headerShown: false
                             }}
                         />
                         <Stack.Screen
@@ -132,10 +129,7 @@ export default function App() {
                             name="Dashboard"
                             component={Dashboard}
                             options={{
-                                headerTransparent: true,
-                                title: '',
-                                headerBackTitleVisible: false,
-                                headerBackVisible: false
+                                headerShown: false
                             }}
                         />
                     </Stack.Navigator>

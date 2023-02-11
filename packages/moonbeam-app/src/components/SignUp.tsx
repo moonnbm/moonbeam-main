@@ -322,11 +322,11 @@ export const SignUpComponent = ({navigation, route}: SignUpProps) => {
             if (passwordFocus && password !== "") {
                 fieldValidation("password");
             }
-            if (confirmPasswordFocus) {
+            if (confirmPasswordFocus && confirmPassword !== "") {
                 fieldValidation("confirmPassword");
             }
-            password === "" && setPasswordErrors([]);
             (confirmPassword === "" && password === "") && setConfirmPasswordErrors([]);
+            password === "" && setPasswordErrors([]);
 
             if (phoneFocus && phoneNumber !== "") {
                 fieldValidation("phoneNumber");
@@ -341,7 +341,7 @@ export const SignUpComponent = ({navigation, route}: SignUpProps) => {
             keyboardDidHideListener.remove();
             keyboardDidShowListener.remove();
         };
-    }, [email, name, birthDate, duty,
+    }, [androidScrollPadding, email, name, birthDate, duty,
         rank, dutyStation, password, confirmPassword,
         phoneNumber, emailFocus, nameFocus, birthDateFocus,
         dutyOpen, rankFocus, dutyStationFocus, passwordFocus,
@@ -373,14 +373,11 @@ export const SignUpComponent = ({navigation, route}: SignUpProps) => {
                     </Button>
                 </Modal>
             </Portal>
-            <SafeAreaView style={styles.container}>
-                {/*<ScrollView*/}
-                {/*    contentContainerStyle={Platform.OS === 'android' && {height: Dimensions.get("window").height+1}}*/}
-                {/*    scrollEnabled={true}>*/}
+            <SafeAreaView style={commonStyles.rowContainer}>
                 <KeyboardAwareScrollView
                     enableOnAndroid={true}
                     scrollEnabled={true}
-                    contentContainerStyle={[styles.keyboardScrollViewContainer, Platform.OS === 'android' ? {height: Dimensions.get("window").height + androidScrollPadding}: {flex : 1}]}>
+                    contentContainerStyle={[commonStyles.keyboardScrollViewContainer, Platform.OS === 'android' ? {height: Dimensions.get("window").height + androidScrollPadding}: {flex : 1}]}>
                     <View style={{flex: 1}}>
                         <View style={[{alignSelf: 'center'}, Platform.OS === 'android' && {marginTop: '15%'}]}>
                             <Text style={styles.signupTitle}>Welcome</Text>
@@ -596,7 +593,7 @@ export const SignUpComponent = ({navigation, route}: SignUpProps) => {
                                 </ProgressStep>
 
                                 <ProgressStep
-                                    // note do not enable this unless we need more space for content
+                                    // note do not enable this unless we need more space for content - need to adjust for Android here
                                     scrollable={false}
                                     label="Security"
                                     nextBtnText={"Next"}
@@ -608,6 +605,8 @@ export const SignUpComponent = ({navigation, route}: SignUpProps) => {
                                     onPrevious={() => {
                                         setProgressStepsSecurityError(false);
                                         setIsRegisterButtonShown(false);
+                                        setIsConfirmPasswordShown(false);
+                                        setIsPasswordShown(false);
                                     }}>
                                     <View style={styles.progressStepView}>
                                         <Text style={styles.securityProgressTitle}>Account Security</Text>
@@ -723,7 +722,6 @@ export const SignUpComponent = ({navigation, route}: SignUpProps) => {
                         </View>
                     }
                 </KeyboardAwareScrollView>
-                {/*</ScrollView>*/}
             </SafeAreaView>
         </ImageBackground>
     );

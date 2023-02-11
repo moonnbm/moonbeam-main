@@ -23,29 +23,25 @@ export const Dashboard = ({navigation, route}: DashboardProps) => {
                 initialRouteName={"Home"}
                 barStyle={{ backgroundColor: '#f2f2f2', height: 70 }}
                 screenOptions={({ route }) => ({
-                    tabBarIcon: ({ focused, color }) => {
+                    tabBarIcon: ({ focused }) => {
                         let iconName:any;
 
                         if (route.name === 'Home') {
-                            iconName = focused
-                                ? 'ios-home-sharp'
-                                : 'ios-home-outline';
+                            iconName = focused ? 'ios-home-sharp' : 'ios-home-outline';
                         } else if (route.name === 'Membership') {
-                            iconName = focused ? 'ios-list' : 'ios-list-outline';
-                        } else if (route.name === 'Account') {
-                            iconName = focused ? 'ios-list' : 'ios-list-outline';
+                            iconName = focused ? 'ribbon-sharp' : 'ribbon-outline';
+                        } else if (route.name === 'Settings') {
+                            iconName = focused ? 'settings-sharp' : 'settings-outline';
                         }
 
                         // You can return any component that you like here!
-                        return <Ionicons name={iconName} size={25} color={color} />;
-                    },
-                    tabBarActiveTintColor: 'tomato',
-                    tabBarInactiveTintColor: 'gray',
+                        return <Ionicons name={iconName} size={25} color={'#313030'} />;
+                    }
                 })}
             >
                 <DashboardTab.Screen name="Home" component={Home}/>
                 <DashboardTab.Screen name="Membership" component={() => {return(<></>)}}/>
-                <DashboardTab.Screen name="Account" component={() => {return(<></>)}}/>
+                <DashboardTab.Screen name="Settings" component={() => {return(<></>)}}/>
             </DashboardTab.Navigator>
         </NavigationContainer>
     );

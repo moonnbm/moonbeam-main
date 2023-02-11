@@ -10,7 +10,7 @@ export type BottomBarStackParamList = {
     Membership: {
 
     }
-    Account: {
+    Settings: {
 
     }
 };

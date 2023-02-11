@@ -1,4 +1,4 @@
-import {StyleSheet} from "react-native";
+import {Platform, StyleSheet} from "react-native";
 
 // styles to be used within the SignUp component
 export const styles = StyleSheet.create({
@@ -6,10 +6,6 @@ export const styles = StyleSheet.create({
         flex: 1,
         flexDirection: 'row',
         flexWrap: 'wrap',
-        alignItems: 'center',
-        justifyContent: 'center'
-    },
-    keyboardScrollViewContainer: {
         alignItems: 'center',
         justifyContent: 'center'
     },
@@ -75,19 +71,19 @@ export const styles = StyleSheet.create({
         fontSize: 20
     },
     contactProgressTitle: {
-        marginTop: '5%',
+        marginTop: '1%',
         fontFamily: 'Raleway-Regular',
         fontSize: 25,
         color: '#2A3779',
     },
     militaryProgressTitle: {
-        marginTop: '5%',
+        marginTop: '1%',
         fontFamily: 'Raleway-Regular',
         fontSize: 25,
         color: '#2A3779',
     },
     securityProgressTitle: {
-        marginTop: '5%',
+        marginTop: '1%',
         fontFamily: 'Raleway-Regular',
         fontSize: 25,
         color: '#2A3779',
@@ -124,7 +120,7 @@ export const styles = StyleSheet.create({
         alignSelf: 'center'
     },
     signUpView: {
-        marginBottom: '10%'
+        marginBottom: Platform.OS === 'android' ? '20%' : '0%'
     },
     signUpFooterButton: {
         borderRadius: 25,
@@ -162,7 +158,7 @@ export const styles = StyleSheet.create({
         marginBottom: '5%',
         fontFamily: 'Raleway-Medium',
         fontSize: 55,
-        width: 350,
+        width: 300,
         color: '#313030',
     },
     modalParagraph: {

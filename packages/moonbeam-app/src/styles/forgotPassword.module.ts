@@ -2,24 +2,19 @@ import {StyleSheet} from "react-native";
 
 // styles to be used within the ForgotPassword component
 export const styles = StyleSheet.create({
-    initialNextBtnStyle: {
-        paddingRight: 90
-    },
     btnStyleText: {
         color: '#2A3779',
         fontFamily: 'Raleway-Medium',
         fontSize: 20
     },
     usernameProgressTitle: {
-        marginLeft: '22%',
-        marginTop: '5%',
+        marginTop: '1%',
         fontFamily: 'Raleway-Regular',
         fontSize: 25,
         color: '#2A3779',
     },
     codeVerificationProgressTitle: {
-        marginLeft: '22%',
-        marginTop: '5%',
+        marginTop: '1%',
         fontFamily: 'Raleway-Regular',
         fontSize: 25,
         color: '#2A3779',
@@ -57,11 +52,10 @@ export const styles = StyleSheet.create({
         fontSize: 12,
         color: 'red'
     },
+    initialNextBtnStyle: {},
     nextBtnStyle: {},
     prevBtnStyle: {},
-    lastPrevBtnStyle: {
-        paddingLeft: 90
-    },
+    lastPrevBtnStyle: {},
     forgotPasswordTitle: {
         fontFamily: 'Raleway-Medium',
         fontSize: 49,
@@ -75,7 +69,7 @@ export const styles = StyleSheet.create({
         width: 300
     },
     bottomView: {
-        marginBottom: '15%',
+        marginBottom: '4%',
         justifyContent: 'center',
         alignItems: 'center'
     },
@@ -135,13 +129,13 @@ export const styles = StyleSheet.create({
         alignSelf: 'flex-start',
         fontFamily: 'Raleway-Regular',
         fontSize: 16,
-        width: 350,
+        width: 300,
         color: '#313030'
     },
     modalContainer: {
         alignSelf: 'center',
         backgroundColor: 'white',
-        width: 400,
+        width: 350,
         borderRadius: 15,
         padding: 20,
         borderWidth: 1,
@@ -149,7 +143,12 @@ export const styles = StyleSheet.create({
     modalButton: {
         borderRadius: 25,
         height: 40,
-        width: 350,
+        width: 300,
         marginTop: '10%'
     },
+    progressStepView: {
+        alignItems: 'center',
+        alignSelf: 'center',
+        width: 450,
+    }
 });

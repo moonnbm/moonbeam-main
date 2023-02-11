@@ -2,6 +2,37 @@ import {StyleSheet} from "react-native";
 
 // styles to be used within the EmailVerify component
 export const styles = StyleSheet.create({
+    modelTitle: {
+        marginBottom: '5%',
+        fontFamily: 'Raleway-Medium',
+        fontSize: 55,
+        width: 300,
+        color: '#313030',
+    },
+    modalParagraph: {
+        textAlign: 'center',
+        alignSelf: 'flex-start',
+        fontFamily: 'Raleway-Regular',
+        fontSize: 16,
+        width: 350,
+        color: '#313030'
+    },
+    modalContainer: {
+        alignSelf: 'center',
+        backgroundColor: 'white',
+        width: 400,
+        borderRadius: 15,
+        padding: 20,
+        borderWidth: 1,
+        borderColor: 'red'
+    },
+    modalButton: {
+        borderRadius: 25,
+        borderColor: 'red',
+        height: 40,
+        width: 350,
+        marginTop: '10%'
+    },
     mainView: {
         width: 350,
         alignSelf: 'center',
@@ -70,35 +101,6 @@ export const styles = StyleSheet.create({
         fontFamily: 'Raleway-Bold',
         fontSize: 20,
         color: '#2A3779',
-    },
-    modelTitle: {
-        marginBottom: '5%',
-        fontFamily: 'Raleway-Medium',
-        fontSize: 55,
-        width: 350,
-        color: '#313030',
-    },
-    modalParagraph: {
-        textAlign: 'center',
-        alignSelf: 'flex-start',
-        fontFamily: 'Raleway-Regular',
-        fontSize: 16,
-        width: 350,
-        color: '#313030'
-    },
-    modalContainer: {
-        alignSelf: 'center',
-        backgroundColor: 'white',
-        width: 400,
-        borderRadius: 15,
-        padding: 20,
-        borderWidth: 1,
-    },
-    modalButton: {
-        borderRadius: 25,
-        height: 40,
-        width: 350,
-        marginTop: '10%'
     },
     disclaimerView: {
         marginTop: '20%'

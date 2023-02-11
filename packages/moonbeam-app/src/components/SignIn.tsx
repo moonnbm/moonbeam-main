@@ -205,7 +205,7 @@ export const SignInComponent = ({navigation, route}: SignInProps) => {
                                 if (emailErrors.length === 0 || passwordErrors.length === 0) {
                                     const signedInFlag = await confirmSignIn(email, password);
                                     if (signedInFlag) {
-                                        navigation.navigate('Dashboard', {})
+                                        navigation.navigate('Dashboard', {});
                                     }
                                 }
                             }

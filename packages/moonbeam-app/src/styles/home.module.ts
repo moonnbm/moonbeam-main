@@ -2,19 +2,11 @@ import {StyleSheet} from "react-native";
 
 // styles to be used within the Dashboard component
 export const styles = StyleSheet.create({
-    topContainer: {
-        flex: 1,
-        width: '100%',
-        height: '100%',
-        flexDirection: 'column',
-        alignContent: 'center',
-        backgroundColor: '#f2f2f2',
-    },
     topBarView: {
-        flex: 0.50,
-        flexDirection: 'column',
-        alignItems: 'center',
+        flex: 1,
+        flexDirection: 'row',
         justifyContent: 'center',
+        alignItems: 'center',
         backgroundColor: '#f2f2f2',
         shadowColor: '#313030',
         shadowOffset: {width: -2, height: 15},
@@ -22,14 +14,141 @@ export const styles = StyleSheet.create({
         shadowRadius: 10,
         elevation: 15,
         borderBottomLeftRadius: 60,
-        borderBottomRightRadius: 60
+        borderBottomRightRadius: 60,
     },
-    dashboardTopViewRight: {
+    topBarColumnView: {
+        flexDirection: 'row',
+        justifyContent: 'center',
+        alignItems: 'center',
+    },
+    dashboardColumnItemFirst: {
         flex: 1,
-        alignSelf: 'flex-end',
+        marginLeft: '2%',
+        marginBottom: '65%',
+        justifyContent: 'center',
+        alignItems: 'flex-start'
     },
-    dashboardTopViewRightImage: {
-        flex: 0.9,
-        resizeMode: 'contain'
+    dashboardColumnItemMiddle: {
+        flex: 1,
+        marginBottom: '12%',
+        justifyContent: 'center',
+        alignItems: 'center',
+        flexDirection: 'column'
+    },
+    dashboardColumnItemLast: {
+        flex: 1,
+        marginBottom: '65%',
+        justifyContent: 'center',
+        alignItems: 'flex-end'
+    },
+    homeDashboardLogo: {
+        height: 80,
+        width: 150,
+        alignSelf: 'center'
+    },
+    balanceDashboardTitle: {
+        fontFamily: 'Raleway-Medium',
+        fontSize: 20,
+        color: '#313030',
+        alignSelf: 'center'
+    },
+    balanceDashboardBalanceTotal: {
+        fontFamily: 'Raleway-Regular',
+        fontSize: 20,
+        color: '#A2B000',
+        alignSelf: 'center'
+    },
+    balanceDashboardBalanceAvailable: {
+        fontFamily: 'Raleway-Regular',
+        fontSize: 20,
+        color: '#A2B000',
+        alignSelf: 'center'
+    },
+    balanceDashboardBalanceAvailableText: {
+        fontFamily: 'Raleway-Regular',
+        fontSize: 18,
+        color: '#313030',
+        alignSelf: 'center'
+    },
+    dahboardBalanceTopView: {
+        marginTop: '5%'
+    },
+    dashboardButtonView: {
+        flexDirection: 'row',
+        position: 'absolute',
+        shadowColor: 'black',
+        shadowOffset: {width: -2, height: 5},
+        shadowOpacity: 0.5,
+        shadowRadius: 10,
+        elevation: 15,
+        alignSelf: 'center'
+    },
+    dashboardButtonRight: {
+        alignSelf: 'center'
+    },
+    dashboardButtonLeft: {
+        alignSelf: 'center'
+    },
+    dashboardButtonText: {
+        fontFamily: 'Raleway-Bold',
+        fontSize: 18,
+        color: '#313030',
+        alignSelf: 'center'
+    },
+    segmentedButtons: {
+        width: 350,
+        alignSelf: 'center'
+    },
+    subHeaderTitle: {
+        alignSelf: 'center',
+        color: '#313030',
+        fontSize: 18,
+        fontFamily: 'Raleway-Bold'
+    },
+    dashboardItemTitle: {
+        color: '#313030',
+        fontFamily: 'Raleway-Bold'
+    },
+    dashboardItemDescription: {
+        color: '#313030',
+        fontFamily: 'Raleway-Medium'
+    },
+    dashboardListDivider: {
+        backgroundColor: '#313030'
+    },
+    topListItemRightView: {
+        flexDirection: 'row'
+    },
+    topPriceView: {
+        alignItems: 'flex-end',
+        justifyContent: 'center',
+        flexDirection: 'column'
+    },
+    listItemPrice: {
+        fontSize: 16,
+        fontFamily: 'Raleway-Bold',
+        color: '#313030',
+    },
+    topPaymentView: {
+        alignItems: 'flex-end',
+        justifyContent: 'center',
+        flexDirection: 'row'
+    },
+    listItemPaymentAmount: {
+        fontSize: 16,
+        fontFamily: 'Raleway-Bold',
+        color: '#313030',
+        marginBottom: '17%'
+    },
+    listItemDiscount: {
+        marginTop: '5%',
+        fontSize: 13,
+        fontFamily: 'Raleway-Medium',
+        color: '#2A3779',
+        backgroundColor: '#c9d179'
+    },
+    listItemIcon: {
+        alignItems: 'flex-end',
+        justifyContent: 'center'
     }
 });

@@ -9,6 +9,19 @@ export const commonStyles = StyleSheet.create({
         alignItems: 'center',
         justifyContent: 'center'
     },
+    rowContainer: {
+        flex: 1,
+        width: '100%',
+        height: '100%',
+        flexDirection: 'row',
+        flexWrap: 'wrap',
+        alignItems: 'center',
+        justifyContent: 'center'
+    },
+    keyboardScrollViewContainer: {
+        alignItems: 'center',
+        justifyContent: 'center'
+    },
     image: {
         flex: 1
     },
