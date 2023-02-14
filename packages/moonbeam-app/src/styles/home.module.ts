@@ -1,12 +1,9 @@
 import {StyleSheet} from "react-native";
 
-// styles to be used within the Dashboard component
+// styles to be used within the Home component
 export const styles = StyleSheet.create({
     topBarView: {
-        flex: 1,
-        flexDirection: 'row',
-        justifyContent: 'center',
-        alignItems: 'center',
+        flex: 0.5,
         backgroundColor: '#f2f2f2',
         shadowColor: '#313030',
         shadowOffset: {width: -2, height: 15},
@@ -14,7 +11,13 @@ export const styles = StyleSheet.create({
         shadowRadius: 10,
         elevation: 15,
         borderBottomLeftRadius: 60,
-        borderBottomRightRadius: 60,
+        borderBottomRightRadius: 60
+    },
+    insideBarView: {
+        flex: 1,
+        flexDirection: 'row',
+        justifyContent: 'center',
+        alignItems: 'center'
     },
     topBarColumnView: {
         flexDirection: 'row',
@@ -112,9 +115,6 @@ export const styles = StyleSheet.create({
     dashboardItemDescription: {
         color: '#313030',
         fontFamily: 'Raleway-Medium'
-    },
-    dashboardListDivider: {
-        backgroundColor: '#313030'
     },
     topListItemRightView: {
         flexDirection: 'row'

@@ -1,6 +1,6 @@
 import React, {useEffect, useState} from "react";
 import {EmailVerifyProps} from "../models/RootProps";
-import {Image, ImageBackground, Text, View} from "react-native";
+import {Dimensions, Image, ImageBackground, Text, View} from "react-native";
 import {commonStyles} from "../styles/common.module";
 import {styles} from "../styles/emailVerify.module";
 // @ts-ignore
@@ -155,7 +155,7 @@ export const EmailVerify = ({navigation, route}: EmailVerifyProps) => {
                 contentContainerStyle={commonStyles.container}>
                 <View style={styles.mainView}>
                     <View style={styles.topView}>
-                        <Image source={CongratulationsSplash} style={styles.congratulationsSplash}/>
+                        <Image source={CongratulationsSplash} style={[styles.congratulationsSplash, {height: Dimensions.get('window').height/4 ,width: Dimensions.get('window').width/2.5, alignSelf: 'center'}]}/>
                     </View>
                     <View>
                         <Text style={styles.emailVerifyTitle}>Congratulations</Text>

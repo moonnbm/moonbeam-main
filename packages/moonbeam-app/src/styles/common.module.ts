@@ -25,4 +25,7 @@ export const commonStyles = StyleSheet.create({
     image: {
         flex: 1
     },
+    divider: {
+        backgroundColor: '#313030'
+    }
 });

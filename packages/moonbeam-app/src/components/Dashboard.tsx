@@ -7,11 +7,15 @@ import {createMaterialBottomTabNavigator} from '@react-navigation/material-botto
 import {NavigationContainer} from '@react-navigation/native';
 import Ionicons from '@expo/vector-icons/Ionicons';
 import {Home} from './Home';
+import {Membership} from './Membership';
 
 /**
  * Dashboard component.
  */
 export const Dashboard = ({navigation, route}: DashboardProps) => {
+    // state driven key-value pairs for UI related elements
+
+    // state driven key-value pairs for any specific data values
 
     // create a native bottom navigator, to be used for our bottom bar navigation
     const DashboardTab = createMaterialBottomTabNavigator<BottomBarStackParamList>();
@@ -21,10 +25,10 @@ export const Dashboard = ({navigation, route}: DashboardProps) => {
         <NavigationContainer independent={true}>
             <DashboardTab.Navigator
                 initialRouteName={"Home"}
-                barStyle={{ backgroundColor: '#f2f2f2', height: 70 }}
-                screenOptions={({ route }) => ({
-                    tabBarIcon: ({ focused }) => {
-                        let iconName:any;
+                barStyle={{backgroundColor: '#f2f2f2', height: 70}}
+                screenOptions={({route}) => ({
+                    tabBarIcon: ({focused}) => {
+                        let iconName: any;
 
                         if (route.name === 'Home') {
                             iconName = focused ? 'ios-home-sharp' : 'ios-home-outline';
@@ -35,13 +39,15 @@ export const Dashboard = ({navigation, route}: DashboardProps) => {
                         }
 
                         // You can return any component that you like here!
-                        return <Ionicons name={iconName} size={25} color={'#313030'} />;
+                        return <Ionicons name={iconName} size={25} color={'#313030'}/>;
                     }
                 })}
             >
                 <DashboardTab.Screen name="Home" component={Home}/>
-                <DashboardTab.Screen name="Membership" component={() => {return(<></>)}}/>
-                <DashboardTab.Screen name="Settings" component={() => {return(<></>)}}/>
+                <DashboardTab.Screen name="Membership" component={Membership}/>
+                <DashboardTab.Screen name="Settings" component={() => {
+                    return (<></>)
+                }}/>
             </DashboardTab.Navigator>
         </NavigationContainer>
     );
