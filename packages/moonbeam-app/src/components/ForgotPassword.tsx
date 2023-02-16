@@ -1,5 +1,5 @@
 import React, {useEffect, useState} from "react";
-import {Dimensions, Image, ImageBackground, Keyboard, Platform, SafeAreaView, View} from "react-native";
+import {Dimensions, Image, ImageBackground, Keyboard, Platform, SafeAreaView, ScrollView, View} from "react-native";
 import {ForgotPasswordProps} from "../models/RootProps";
 import {commonStyles} from "../styles/common.module";
 // @ts-ignore
@@ -250,222 +250,229 @@ export const ForgotPassword = ({navigation, route}: ForgotPasswordProps) => {
                 </Modal>
             </Portal>
             <SafeAreaView style={commonStyles.rowContainer}>
-                <KeyboardAwareScrollView
-                    enableOnAndroid={true}
-                    scrollEnabled={true}
-                    contentContainerStyle={[commonStyles.keyboardScrollViewContainer, Platform.OS === 'android' ? {height: Dimensions.get("window").height + androidScrollPadding} : {flex: 1}]}>
-                    <View style={{flex: 1}}>
-                        <View style={[{alignSelf: 'center'}, Platform.OS === 'android' && {marginTop: '15%'}]}>
-                            <Text style={styles.forgotPasswordTitle}>
-                                {resetPasswordDisclaimerShown ? 'Great' : 'Welcome'}
-                            </Text>
-                            <Text style={styles.forgotPasswordSubtitle}>
-                                {resetPasswordDisclaimerShown ? 'We just sent a code via email' : 'Input your new password'}
-                            </Text>
-                        </View>
-                        <View style={{flex: 1}}>
-                            <ProgressSteps
-                                progressBarColor={"grey"}
-                                disabledStepIconColor={"grey"}
-                                labelColor={"#313030"}
-                                activeLabelColor={"#2A3779"}
-                                activeStepIconBorderColor={"#2A3779"}
-                                completedStepIconColor={"#2A3779"}
-                                completedProgressBarColor={"#2A3779"}
-                                completedLabelColor={"#2A3779"}
-                                labelFontSize={16}
-                                labelFontFamily={"Raleway-Medium"}>
-                                <ProgressStep
-                                    // note do not enable this unless we need more space for content - need to adjust for Android here
-                                    scrollable={false}
-                                    label="Profile"
-                                    nextBtnStyle={styles.initialNextBtnStyle}
-                                    nextBtnTextStyle={styles.btnStyleText}
-                                    onNext={async () => {
-                                        if (email === "" || password === "" || confirmPassword === "") {
-                                            setProfileStepProgressError(true);
-                                            setProgressStepsErrors(true);
-                                        } else {
-                                            fieldValidation("email");
-                                            fieldValidation("password");
-                                            fieldValidation("confirmPassword");
-                                            if (emailErrors.length !== 0 || passwordErrors.length !== 0 || confirmPasswordErrors.length !== 0) {
+                <ScrollView style={{height: Dimensions.get('window').height}}
+                            scrollEnabled={true}
+                            persistentScrollbar={false}
+                            showsHorizontalScrollIndicator={false}>
+                    <KeyboardAwareScrollView
+                        enableOnAndroid={true}
+                        scrollEnabled={true}
+                        contentContainerStyle={[commonStyles.keyboardScrollViewContainer, Platform.OS === 'android' ? {height: Dimensions.get("window").height + androidScrollPadding} : {flex: 1}]}>
+                        <View style={{flex: 1, zIndex: 1}}>
+                            <View style={[{alignSelf: 'center'}, Platform.OS === 'android' && {marginTop: '15%'}]}>
+                                <Text style={styles.forgotPasswordTitle}>
+                                    {resetPasswordDisclaimerShown ? 'Great' : 'Welcome'}
+                                </Text>
+                                <Text style={styles.forgotPasswordSubtitle}>
+                                    {resetPasswordDisclaimerShown ? 'We just sent a code via email' : 'Input your new password'}
+                                </Text>
+                            </View>
+                            <View style={{flex: 1}}>
+                                <ProgressSteps
+                                    progressBarColor={"grey"}
+                                    disabledStepIconColor={"grey"}
+                                    labelColor={"#313030"}
+                                    activeLabelColor={"#2A3779"}
+                                    activeStepIconBorderColor={"#2A3779"}
+                                    completedStepIconColor={"#2A3779"}
+                                    completedProgressBarColor={"#2A3779"}
+                                    completedLabelColor={"#2A3779"}
+                                    labelFontSize={16}
+                                    labelFontFamily={"Raleway-Medium"}>
+                                    <ProgressStep
+                                        // note do not enable this unless we need more space for content - need to adjust for Android here
+                                        scrollable={false}
+                                        label="Profile"
+                                        nextBtnStyle={styles.initialNextBtnStyle}
+                                        nextBtnTextStyle={styles.btnStyleText}
+                                        onNext={async () => {
+                                            if (email === "" || password === "" || confirmPassword === "") {
+                                                setProfileStepProgressError(true);
                                                 setProgressStepsErrors(true);
-                                            } else if (emailErrors.length === 0 || passwordErrors.length === 0 || confirmPasswordErrors.length === 0) {
-                                                const codeRetrievedFlag = await passwordCodeRetrieval(email);
-                                                console.log('HERE' + codeRetrievedFlag);
-                                                if (!codeRetrievedFlag) {
+                                            } else {
+                                                fieldValidation("email");
+                                                fieldValidation("password");
+                                                fieldValidation("confirmPassword");
+                                                if (emailErrors.length !== 0 || passwordErrors.length !== 0 || confirmPasswordErrors.length !== 0) {
                                                     setProgressStepsErrors(true);
-                                                } else {
-                                                    setProfileStepProgressError(false);
-                                                    setProgressStepsErrors(false);
-                                                    setIsPasswordShown(false);
-                                                    setIsConfirmPasswordShown(false);
-                                                    setResetPasswordDisclaimerShown(true);
+                                                } else if (emailErrors.length === 0 || passwordErrors.length === 0 || confirmPasswordErrors.length === 0) {
+                                                    const codeRetrievedFlag = await passwordCodeRetrieval(email);
+                                                    console.log('HERE' + codeRetrievedFlag);
+                                                    if (!codeRetrievedFlag) {
+                                                        setProgressStepsErrors(true);
+                                                    } else {
+                                                        setProfileStepProgressError(false);
+                                                        setProgressStepsErrors(false);
+                                                        setIsPasswordShown(false);
+                                                        setIsConfirmPasswordShown(false);
+                                                        setResetPasswordDisclaimerShown(true);
+                                                    }
                                                 }
                                             }
-                                        }
-                                    }}
-                                    errors={progressStepsErrors}>
-                                    <View style={styles.progressStepView}>
-                                        <Text style={styles.usernameProgressTitle}>Profile Information</Text>
-                                        {profileStepProgressError &&
-                                            <Text style={styles.errorMessageMain}>Please fill out the information
-                                                below!</Text>}
-                                        {/* @ts-ignore */}
-                                        <TextInput
-                                            onChangeText={(value: React.SetStateAction<string>) => {
-                                                setIsEmailFocus(true);
-                                                setProfileStepProgressError(false);
-                                                setEmail(value);
-                                            }}
-                                            value={email}
-                                            style={emailFocus ? styles.initialTextInputFocus : styles.initialTextInput}
-                                            onFocus={() => {
-                                                setIsEmailFocus(true);
-                                            }}
-                                            label="Email"
-                                            textColor={"#313030"}
-                                            underlineColor={"#f2f2f2"}
-                                            activeUnderlineColor={"#313030"}
-                                            left={<TextInput.Icon icon="email" iconColor="#313030"/>}
-                                        />
-                                        {(emailErrors.length > 0 && !profileStepProgressError) ?
-                                            <Text style={styles.errorMessage}>{emailErrors[0]}</Text> : <></>}
+                                        }}
+                                        errors={progressStepsErrors}>
+                                        <View style={styles.progressStepView}>
+                                            <Text style={styles.usernameProgressTitle}>Profile Information</Text>
+                                            {profileStepProgressError &&
+                                                <Text style={styles.errorMessageMain}>Please fill out the information
+                                                    below!</Text>}
+                                            {/* @ts-ignore */}
+                                            <TextInput
+                                                onChangeText={(value: React.SetStateAction<string>) => {
+                                                    setIsEmailFocus(true);
+                                                    setProfileStepProgressError(false);
+                                                    setEmail(value);
+                                                }}
+                                                value={email}
+                                                style={emailFocus ? styles.initialTextInputFocus : styles.initialTextInput}
+                                                onFocus={() => {
+                                                    setIsEmailFocus(true);
+                                                }}
+                                                label="Email"
+                                                textColor={"#313030"}
+                                                underlineColor={"#f2f2f2"}
+                                                activeUnderlineColor={"#313030"}
+                                                left={<TextInput.Icon icon="email" iconColor="#313030"/>}
+                                            />
+                                            {(emailErrors.length > 0 && !profileStepProgressError) ?
+                                                <Text style={styles.errorMessage}>{emailErrors[0]}</Text> : <></>}
 
-                                        {/* @ts-ignore */}
-                                        <TextInput
-                                            onChangeText={(value: React.SetStateAction<string>) => {
-                                                setIsPasswordFocus(true);
-                                                setProfileStepProgressError(false);
-                                                setPassword(value);
-                                            }}
-                                            value={password}
-                                            style={passwordFocus ? styles.textInputFocus : styles.textInput}
-                                            onFocus={() => {
-                                                setIsPasswordFocus(true);
-                                            }}
-                                            label="Password"
-                                            secureTextEntry={!passwordShown}
-                                            textColor={"#313030"}
-                                            underlineColor={"#f2f2f2"}
-                                            activeUnderlineColor={"#313030"}
-                                            right={<TextInput.Icon icon="eye"
-                                                                   iconColor={passwordShown ? "#A2B000" : "#313030"}
-                                                                   onPress={() => setIsPasswordShown(!passwordShown)}/>}
-                                            left={<TextInput.Icon icon="lock" iconColor="#313030"/>}
-                                        />
-                                        {(passwordErrors.length > 0 && !profileStepProgressError) ?
-                                            <Text style={styles.errorMessage}>{passwordErrors[0]}</Text> : <></>}
-                                        {/* @ts-ignore */}
-                                        <TextInput
-                                            onChangeText={(value: React.SetStateAction<string>) => {
-                                                setIsConfirmPasswordFocus(true);
-                                                setProfileStepProgressError(false);
-                                                setConfirmPassword(value);
-                                            }}
-                                            value={confirmPassword}
-                                            style={confirmPasswordFocus ? styles.textInputFocus : styles.textInput}
-                                            onFocus={() => {
-                                                setIsConfirmPasswordFocus(true);
-                                            }}
-                                            label="Confirm Password"
-                                            secureTextEntry={!confirmPasswordShown}
-                                            textColor={"#313030"}
-                                            underlineColor={"#f2f2f2"}
-                                            activeUnderlineColor={"#313030"}
-                                            right={<TextInput.Icon icon="eye"
-                                                                   iconColor={confirmPasswordShown ? "#A2B000" : "#313030"}
-                                                                   onPress={() => setIsConfirmPasswordShown(!confirmPasswordShown)}/>}
-                                            left={<TextInput.Icon icon="lock" iconColor="#313030"/>}
-                                        />
-                                        {(confirmPasswordErrors.length > 0 && !profileStepProgressError) ?
-                                            <Text style={styles.errorMessage}>{confirmPasswordErrors[0]}</Text> : <></>}
-                                    </View>
-                                </ProgressStep>
+                                            {/* @ts-ignore */}
+                                            <TextInput
+                                                onChangeText={(value: React.SetStateAction<string>) => {
+                                                    setIsPasswordFocus(true);
+                                                    setProfileStepProgressError(false);
+                                                    setPassword(value);
+                                                }}
+                                                value={password}
+                                                style={passwordFocus ? styles.textInputFocus : styles.textInput}
+                                                onFocus={() => {
+                                                    setIsPasswordFocus(true);
+                                                }}
+                                                label="Password"
+                                                secureTextEntry={!passwordShown}
+                                                textColor={"#313030"}
+                                                underlineColor={"#f2f2f2"}
+                                                activeUnderlineColor={"#313030"}
+                                                right={<TextInput.Icon icon="eye"
+                                                                       iconColor={passwordShown ? "#A2B000" : "#313030"}
+                                                                       onPress={() => setIsPasswordShown(!passwordShown)}/>}
+                                                left={<TextInput.Icon icon="lock" iconColor="#313030"/>}
+                                            />
+                                            {(passwordErrors.length > 0 && !profileStepProgressError) ?
+                                                <Text style={styles.errorMessage}>{passwordErrors[0]}</Text> : <></>}
+                                            {/* @ts-ignore */}
+                                            <TextInput
+                                                onChangeText={(value: React.SetStateAction<string>) => {
+                                                    setIsConfirmPasswordFocus(true);
+                                                    setProfileStepProgressError(false);
+                                                    setConfirmPassword(value);
+                                                }}
+                                                value={confirmPassword}
+                                                style={confirmPasswordFocus ? styles.textInputFocus : styles.textInput}
+                                                onFocus={() => {
+                                                    setIsConfirmPasswordFocus(true);
+                                                }}
+                                                label="Confirm Password"
+                                                secureTextEntry={!confirmPasswordShown}
+                                                textColor={"#313030"}
+                                                underlineColor={"#f2f2f2"}
+                                                activeUnderlineColor={"#313030"}
+                                                right={<TextInput.Icon icon="eye"
+                                                                       iconColor={confirmPasswordShown ? "#A2B000" : "#313030"}
+                                                                       onPress={() => setIsConfirmPasswordShown(!confirmPasswordShown)}/>}
+                                                left={<TextInput.Icon icon="lock" iconColor="#313030"/>}
+                                            />
+                                            {(confirmPasswordErrors.length > 0 && !profileStepProgressError) ?
+                                                <Text style={styles.errorMessage}>{confirmPasswordErrors[0]}</Text> : <></>}
+                                        </View>
+                                    </ProgressStep>
 
-                                <ProgressStep
-                                    // note do not enable this unless we need more space for content
-                                    scrollable={false}
-                                    label="Verification"
-                                    nextBtnStyle={styles.nextBtnStyle}
-                                    nextBtnTextStyle={styles.btnStyleText}
-                                    finishBtnText={""}
-                                    previousBtnText={"Back"}
-                                    previousBtnStyle={styles.lastPrevBtnStyle}
-                                    previousBtnTextStyle={styles.btnStyleText}
-                                    errors={progressStepsErrors}
-                                    onPrevious={() => {
-                                        setCodeVerificationStepProgressError(false);
-                                        setResetPasswordDisclaimerShown(false);
-                                    }}>
-                                    <View style={styles.progressStepView}>
-
-                                        <Text style={styles.codeVerificationProgressTitle}>Code Verification</Text>
-                                        {codeVerificationStepProgressError &&
-                                            <Text style={styles.errorMessageMain}>Please fill out the information
-                                                below!</Text>}
-                                        {/* @ts-ignore */}
-                                        <TextInput
-                                            onChangeText={(value: React.SetStateAction<string>) => {
-                                                setIsCodeFocus(true);
-                                                setCodeVerificationStepProgressError(false);
-                                                setCode(value);
-                                            }}
-                                            value={code}
-                                            style={codeFocus ? styles.initialTextInputFocus : styles.initialTextInput}
-                                            onFocus={() => {
-                                                setIsCodeFocus(true);
-                                            }}
-                                            label="Verification Code"
-                                            textColor={"#313030"}
-                                            underlineColor={"#f2f2f2"}
-                                            activeUnderlineColor={"#313030"}
-                                            left={<TextInput.Icon icon="dialpad" iconColor="#313030"/>}
-                                        />
-                                        {(codeErrors.length > 0 && !codeVerificationStepProgressError) ?
-                                            <Text style={styles.errorMessage}>{codeErrors[0]}</Text> : <></>}
-                                    </View>
-                                </ProgressStep>
-                            </ProgressSteps>
-                        </View>
-                    </View>
-                    <View style={[styles.bottomView, resetPasswordDisclaimerShown && {marginBottom: '4%'}]}>
-                        {resetPasswordDisclaimerShown &&
-                            <Button
-                                style={styles.resetPasswordButton}
-                                textColor={"#f2f2f2"}
-                                buttonColor={"#2A3779"}
-                                mode="outlined"
-                                labelStyle={{fontSize: 18}}
-                                onPress={() => {
-                                    if (code === "") {
-                                        setCodeVerificationStepProgressError(true);
-                                        setProgressStepsErrors(true);
-                                    } else {
-                                        fieldValidation("code");
-                                        if (codeErrors.length !== 0) {
-                                            setProgressStepsErrors(true);
-                                        } else if (codeErrors.length === 0) {
+                                    <ProgressStep
+                                        // note do not enable this unless we need more space for content
+                                        scrollable={false}
+                                        label="Verification"
+                                        nextBtnStyle={styles.nextBtnStyle}
+                                        nextBtnTextStyle={styles.btnStyleText}
+                                        finishBtnText={""}
+                                        previousBtnText={"Back"}
+                                        previousBtnStyle={styles.lastPrevBtnStyle}
+                                        previousBtnTextStyle={styles.btnStyleText}
+                                        errors={progressStepsErrors}
+                                        onPrevious={() => {
                                             setCodeVerificationStepProgressError(false);
-                                            setProgressStepsErrors(false);
-                                            passwordReset(email, password, code);
+                                            setResetPasswordDisclaimerShown(false);
+                                        }}>
+                                        <View style={styles.progressStepView}>
+
+                                            <Text style={styles.codeVerificationProgressTitle}>Code Verification</Text>
+                                            {codeVerificationStepProgressError &&
+                                                <Text style={styles.errorMessageMain}>Please fill out the information
+                                                    below!</Text>}
+                                            {/* @ts-ignore */}
+                                            <TextInput
+                                                onChangeText={(value: React.SetStateAction<string>) => {
+                                                    setIsCodeFocus(true);
+                                                    setCodeVerificationStepProgressError(false);
+                                                    setCode(value);
+                                                }}
+                                                value={code}
+                                                style={codeFocus ? styles.initialTextInputFocus : styles.initialTextInput}
+                                                onFocus={() => {
+                                                    setIsCodeFocus(true);
+                                                }}
+                                                label="Verification Code"
+                                                textColor={"#313030"}
+                                                underlineColor={"#f2f2f2"}
+                                                activeUnderlineColor={"#313030"}
+                                                left={<TextInput.Icon icon="dialpad" iconColor="#313030"/>}
+                                            />
+                                            {(codeErrors.length > 0 && !codeVerificationStepProgressError) ?
+                                                <Text style={styles.errorMessage}>{codeErrors[0]}</Text> : <></>}
+                                        </View>
+                                    </ProgressStep>
+                                </ProgressSteps>
+                            </View>
+                        </View>
+                        <View style={[styles.bottomView, resetPasswordDisclaimerShown ? {marginTop: '-5%'} : {marginTop: `-${Dimensions.get('window').height/50}%`}]}>
+                            {resetPasswordDisclaimerShown &&
+                                <Button
+                                    style={styles.resetPasswordButton}
+                                    textColor={"#f2f2f2"}
+                                    buttonColor={"#2A3779"}
+                                    mode="outlined"
+                                    labelStyle={{fontSize: 18}}
+                                    onPress={async () => {
+                                        if (code === "") {
+                                            setCodeVerificationStepProgressError(true);
+                                            setProgressStepsErrors(true);
+                                        } else {
+                                            fieldValidation("code");
+                                            if (codeErrors.length !== 0) {
+                                                setProgressStepsErrors(true);
+                                            } else if (codeErrors.length === 0) {
+                                                setCodeVerificationStepProgressError(false);
+                                                setProgressStepsErrors(false);
+                                                await passwordReset(email, password, code);
+                                            }
                                         }
-                                    }
-                                }}>
-                                Reset Password
-                            </Button>
-                        }
-                        <Image source={ForgotPasswordLogo} style={styles.forgotPasswordLogo}/>
-                        <Text style={styles.forgotPasswordFooter}>
-                            Remember your password ?
-                            <Text style={styles.forgotPasswordFooterButton}
-                                  onPress={() => {
-                                      navigation.navigate('SignIn', {initialRender: true})
-                                  }}> Sign in</Text>
-                        </Text>
-                    </View>
-                </KeyboardAwareScrollView>
+                                    }}>
+                                    Reset Password
+                                </Button>
+                            }
+                            <View>
+                                <Image source={ForgotPasswordLogo} style={[styles.forgotPasswordLogo, {height: Dimensions.get('window').height/6, width: Dimensions.get('window').width/4}]}/>
+                                <Text style={styles.forgotPasswordFooter}>
+                                    Remember your password ?
+                                    <Text style={styles.forgotPasswordFooterButton}
+                                          onPress={() => {
+                                              navigation.navigate('SignIn', {initialRender: true})
+                                          }}> Sign in</Text>
+                                </Text>
+                            </View>
+                        </View>
+                    </KeyboardAwareScrollView>
+                </ScrollView>
             </SafeAreaView>
         </ImageBackground>
     );

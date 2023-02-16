@@ -22,7 +22,7 @@ export const Membership = ({navigation, route}: MemerbshipTabProps) => {
     // state driven key-value pairs for any specific data values
 
     return (
-        <SafeAreaView style={commonStyles.rowContainer}>
+        <SafeAreaView style={[commonStyles.rowContainer, commonStyles.androidSafeArea]}>
             <KeyboardAwareScrollView
                 enableOnAndroid={true}
                 scrollEnabled={true}>
@@ -57,7 +57,7 @@ export const Membership = ({navigation, route}: MemerbshipTabProps) => {
                 <View style={styles.membershipContentView}>
                     <Card style={[styles.cardStyle, {
                         width: Dimensions.get('window').width / 1.3,
-                        height: Dimensions.get('window').height / 4.3
+                        height: Dimensions.get('window').height / 3.7
                     }]} mode={'elevated'} elevation={5}>
                         <Card.Title title="Membership Rewards ®" subtitle="Alpha Card (••••8762)"
                                     titleStyle={styles.cardTitleStyle} subtitleStyle={styles.cardSubtitleStyle}/>
@@ -82,13 +82,13 @@ export const Membership = ({navigation, route}: MemerbshipTabProps) => {
                                     onPress={() => {
                                     }}
                                     style={[styles.redeemButton, {
-                                        height: Dimensions.get('window').height / 23,
-                                        width: Dimensions.get('window').height / 6
+                                        height: Dimensions.get('window').height / 20,
+                                        width: Dimensions.get('window').width / 3
                                     }]}
                                     textColor={"#f2f2f2"}
                                     buttonColor={"#2A3779"}
                                     mode="outlined"
-                                    labelStyle={{fontSize: Dimensions.get('window').height / 55}}>
+                                    labelStyle={{fontSize: Dimensions.get('window').height / 50}}>
                                     Redeem
                                 </Button>
                             </View>
@@ -103,7 +103,7 @@ export const Membership = ({navigation, route}: MemerbshipTabProps) => {
                                 persistentScrollbar={false} showsHorizontalScrollIndicator={false}>
                         <Card style={[styles.cardStyleOffers, {
                             width: Dimensions.get('window').width / 1.8,
-                            height: Dimensions.get('window').height / 3
+                            height: Dimensions.get('window').height / 2.7
                         }]} mode={'elevated'} elevation={5}>
                             <Card.Title title="Welcome Offer" subtitle="New Alpha Member Offer."
                                         titleStyle={styles.cardTitleStyle} subtitleStyle={styles.cardSubtitleStyle}
@@ -125,20 +125,20 @@ export const Membership = ({navigation, route}: MemerbshipTabProps) => {
                                 onPress={() => {
                                 }}
                                 style={[styles.redeemButtonOffers, {
-                                    height: Dimensions.get('window').height / 25,
-                                    width: Dimensions.get('window').height / 8
+                                    height: Dimensions.get('window').height / 20,
+                                    width: Dimensions.get('window').width / 3
                                 }]}
                                 textColor={"#f2f2f2"}
                                 buttonColor={"#2A3779"}
                                 mode="outlined"
-                                labelStyle={{fontSize: Dimensions.get('window').height / 55}}>
+                                labelStyle={{fontSize: Dimensions.get('window').height / 50}}>
                                 Redeem
                             </Button>
                         </Card>
                         <View style={{width: 50}}></View>
                         <Card style={[styles.cardStyleOffers, {
                             width: Dimensions.get('window').width / 1.8,
-                            height: Dimensions.get('window').height / 3
+                            height: Dimensions.get('window').height / 2.7
                         }]} mode={'elevated'} elevation={5}>
                             <Card.Title title="Referral Offer" subtitle="Refer to the Alpha program."
                                         titleStyle={styles.cardTitleStyle} subtitleStyle={styles.cardSubtitleStyle}/>
@@ -159,13 +159,13 @@ export const Membership = ({navigation, route}: MemerbshipTabProps) => {
                                 onPress={() => {
                                 }}
                                 style={[styles.redeemButtonOffers, {
-                                    height: Dimensions.get('window').height / 25,
-                                    width: Dimensions.get('window').height / 8
+                                    height: Dimensions.get('window').height / 20,
+                                    width: Dimensions.get('window').width / 3
                                 }]}
                                 textColor={"#f2f2f2"}
                                 buttonColor={"#2A3779"}
                                 mode="outlined"
-                                labelStyle={{fontSize: Dimensions.get('window').height / 55}}>
+                                labelStyle={{fontSize: Dimensions.get('window').height / 50}}>
                                 Redeem
                             </Button>
                         </Card>

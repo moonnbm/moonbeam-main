@@ -2,8 +2,6 @@ import {Dimensions, Image, ImageBackground, SafeAreaView, ScrollView, Text, View
 import {KeyboardAwareScrollView} from 'react-native-keyboard-aware-scroll-view';
 import {HomeTabProps} from '../models/BottomBarProps';
 import {styles} from "../styles/home.module";
-// @ts-ignore
-import DashboardTopViewRight from '../../assets/dashboard-top-view-right.png';
 import React, {useState} from 'react';
 // @ts-ignore
 import HomeDashboardLogo from '../../assets/login-logo.png';
@@ -22,13 +20,12 @@ export const Home = ({navigation, route}: HomeTabProps) => {
     // state driven key-value pairs for any specific data values
 
     return (
-        <SafeAreaView style={commonStyles.rowContainer}>
+        <SafeAreaView style={[commonStyles.rowContainer, commonStyles.androidSafeArea]}>
             <KeyboardAwareScrollView
                 enableOnAndroid={true}
                 scrollEnabled={true}
                 persistentScrollbar={false}
-                showsHorizontalScrollIndicator={false}
-            >
+                showsHorizontalScrollIndicator={false}>
                 <View style={styles.topBarView}>
                     <ImageBackground
                         style={commonStyles.image}
@@ -59,7 +56,7 @@ export const Home = ({navigation, route}: HomeTabProps) => {
                                     formatText={() => {
                                         return (
                                             <View>
-                                                <View style={styles.dahboardBalanceTopView}>
+                                                <View style={styles.dashboardBalanceTopView}>
                                                     <Text style={styles.balanceDashboardTitle}>Balance</Text>
                                                     <Text style={styles.balanceDashboardBalanceTotal}>$2500</Text>
                                                 </View>
@@ -86,7 +83,7 @@ export const Home = ({navigation, route}: HomeTabProps) => {
                         </View>
                     </ImageBackground>
                 </View>
-                <View style={[styles.dashboardButtonView, {marginTop: Dimensions.get('window').width / 1.47}]}>
+                <View style={[styles.dashboardButtonView, {marginTop: Dimensions.get('window').width / 1.75}]}>
                     <View style={styles.dashboardButtonLeft}>
                         <IconButton
                             mode={'contained-tonal'}

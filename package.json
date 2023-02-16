@@ -8,7 +8,9 @@
   "license": "Moonbeam Inc. Proprietary Code License <https://github.com/moonnbm/moonbeam-main/blob/main/LICENSE>",
   "private": true,
   "scripts": {
-    "clean": "rm -rf node_modules && lerna run clean",
+    "bootstrap": "lerna bootstrap --hoist",
+    "build": "lerna run build --stream",
+    "clean": "lerna run clean && rm -rf ./node_modules ./build",
     "postinstall": "husky install"
   },
   "devDependencies": {

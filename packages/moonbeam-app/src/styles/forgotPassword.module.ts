@@ -69,13 +69,12 @@ export const styles = StyleSheet.create({
         width: 300
     },
     bottomView: {
-        marginBottom: '4%',
+        marginTop: '-15%',
         justifyContent: 'center',
         alignItems: 'center'
     },
     forgotPasswordLogo: {
-        height: 90,
-        width: 200
+        alignSelf: 'center'
     },
     forgotPasswordFooter: {
         fontFamily: 'Raleway-Medium',

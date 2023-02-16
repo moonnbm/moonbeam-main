@@ -1,4 +1,4 @@
-import { StyleSheet } from "react-native";
+import {Platform, StyleSheet} from "react-native";
 
 // styles to be used within all components
 export const commonStyles = StyleSheet.create({
@@ -20,12 +20,17 @@ export const commonStyles = StyleSheet.create({
     },
     keyboardScrollViewContainer: {
         alignItems: 'center',
-        justifyContent: 'center'
+        justifyContent: 'center',
+        flexDirection: 'column'
     },
     image: {
         flex: 1
     },
     divider: {
         backgroundColor: '#313030'
-    }
+    },
+    androidSafeArea: {
+        flex: 1,
+        paddingTop: Platform.OS === 'android' ? 25 : 0
+    },
 });

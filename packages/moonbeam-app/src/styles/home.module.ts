@@ -9,7 +9,7 @@ export const styles = StyleSheet.create({
         shadowOffset: {width: -2, height: 15},
         shadowOpacity: 0.5,
         shadowRadius: 10,
-        elevation: 15,
+        elevation: 25,
         borderBottomLeftRadius: 60,
         borderBottomRightRadius: 60
     },
@@ -27,7 +27,7 @@ export const styles = StyleSheet.create({
     dashboardColumnItemFirst: {
         flex: 1,
         marginLeft: '2%',
-        marginBottom: '65%',
+        marginBottom: '50%',
         justifyContent: 'center',
         alignItems: 'flex-start'
     },
@@ -40,7 +40,7 @@ export const styles = StyleSheet.create({
     },
     dashboardColumnItemLast: {
         flex: 1,
-        marginBottom: '65%',
+        marginBottom: '50%',
         justifyContent: 'center',
         alignItems: 'flex-end'
     },
@@ -73,8 +73,8 @@ export const styles = StyleSheet.create({
         color: '#313030',
         alignSelf: 'center'
     },
-    dahboardBalanceTopView: {
-        marginTop: '5%'
+    dashboardBalanceTopView: {
+        // marginTop: '5%'
     },
     dashboardButtonView: {
         flexDirection: 'row',
@@ -83,11 +83,12 @@ export const styles = StyleSheet.create({
         shadowOffset: {width: -2, height: 5},
         shadowOpacity: 0.5,
         shadowRadius: 10,
-        elevation: 15,
+        elevation: 25,
         alignSelf: 'center'
     },
     dashboardButtonRight: {
-        alignSelf: 'center'
+        alignSelf: 'center',
+        elevation: 15
     },
     dashboardButtonLeft: {
         alignSelf: 'center'

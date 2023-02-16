@@ -13,18 +13,22 @@ import {RootStackParamList} from './src/models/RootProps';
 import { EmailVerify } from './src/components/EmailVerify';
 import { ForgotPassword } from './src/components/ForgotPassword';
 import { Dashboard } from './src/components/Dashboard';
+import {Logs} from "expo";
 
 // keep the splash screen visible while we fetch resources
 SplashScreen.preventAutoHideAsync();
 
 // set up Amplify
-Amplify.configure(awsconfig)
+Amplify.configure(awsconfig);
+
+// enable CLI logging with Expo
+Logs.enableExpoCliLogging()
 
 /**
  * Main application entrypoint.
  */
 export default function App() {
-    // state used to keep track of whether the appplication is ready to load or not
+    // state used to keep track of whether the application is ready to load or not
     const [appIsReady, setAppIsReady] = useState(false);
 
     /**
@@ -37,8 +41,8 @@ export default function App() {
     useEffect(() => {
         const prepare = async () => {
             try {
-                // pre-load fonts, make any API calls that we need in here
-                // pre-loading all Raleway fonts
+                // preload fonts, make any API calls that we need in here
+                // preloading all Raleway fonts
                 await Font.loadAsync({
                     'Raleway-Black': require('assets/fonts/static/Raleway-Black.ttf'),
                     'Raleway-BlackItalic': require('assets/fonts/static/Raleway-BlackItalic.ttf'),

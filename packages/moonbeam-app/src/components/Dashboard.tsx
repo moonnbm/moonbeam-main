@@ -1,8 +1,6 @@
 import React from 'react';
 import {DashboardProps} from '../models/RootProps';
 import {BottomBarStackParamList} from '../models/BottomBarProps';
-// @ts-ignore
-import DashboardTopViewRight from '../../assets/dashboard-top-view-right.png';
 import {createMaterialBottomTabNavigator} from '@react-navigation/material-bottom-tabs';
 import {NavigationContainer} from '@react-navigation/native';
 import Ionicons from '@expo/vector-icons/Ionicons';
