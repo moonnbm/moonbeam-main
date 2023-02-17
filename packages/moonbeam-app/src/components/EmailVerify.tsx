@@ -152,7 +152,9 @@ export const EmailVerify = ({navigation, route}: EmailVerifyProps) => {
                 </Modal>
             </Portal>
             <KeyboardAwareScrollView
-                contentContainerStyle={commonStyles.container}>
+                contentContainerStyle={commonStyles.container}
+                keyboardShouldPersistTaps={'handled'}
+            >
                 <View style={styles.mainView}>
                     <View style={styles.topView}>
                         <Image source={CongratulationsSplash} style={[styles.congratulationsSplash, {height: Dimensions.get('window').height/4 ,width: Dimensions.get('window').width/2.5, alignSelf: 'center'}]}/>

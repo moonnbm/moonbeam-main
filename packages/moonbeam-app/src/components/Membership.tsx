@@ -16,7 +16,7 @@ import {CommonActions} from "@react-navigation/native";
 /**
  * Membership component.
  */
-export const Membership = ({navigation, route}: MemerbshipTabProps) => {
+export const Membership = ({navigation}: MemerbshipTabProps) => {
     // state driven key-value pairs for UI related elements
     const [pointsRedeemable, setPointsRedeemable] = useState<boolean>(true);
 
@@ -39,7 +39,9 @@ export const Membership = ({navigation, route}: MemerbshipTabProps) => {
         <SafeAreaView style={[commonStyles.rowContainer, commonStyles.androidSafeArea]}>
             <KeyboardAwareScrollView
                 enableOnAndroid={true}
-                scrollEnabled={true}>
+                scrollEnabled={true}
+                keyboardShouldPersistTaps={'handled'}
+            >
                 <View style={styles.topBarView}>
                     <ImageBackground
                         imageStyle={{

@@ -129,7 +129,9 @@ export const SignInComponent = ({navigation, route}: SignInProps) => {
                 enableOnAndroid={true}
                 enableAutomaticScroll={(Platform.OS === 'ios')}
                 onLayout={route.params.onLayoutRootView}
-                contentContainerStyle={[commonStyles.container]}>
+                contentContainerStyle={[commonStyles.container]}
+                keyboardShouldPersistTaps={'handled'}
+            >
                 <View style={styles.mainView}>
                     <View>
                         <Text style={styles.loginTitle}>Hello</Text>

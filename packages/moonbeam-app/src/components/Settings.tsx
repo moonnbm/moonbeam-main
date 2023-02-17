@@ -19,7 +19,9 @@ export const Settings = ({}: SettingsTabProps) => {
         <SafeAreaView style={[commonStyles.rowContainer, commonStyles.androidSafeArea]}>
             <KeyboardAwareScrollView
                 enableOnAndroid={true}
-                scrollEnabled={true}>
+                scrollEnabled={true}
+                keyboardShouldPersistTaps={'handled'}
+            >
                 <View style={styles.topBarView}>
                     <ImageBackground
                         imageStyle={{

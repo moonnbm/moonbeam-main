@@ -377,7 +377,9 @@ export const SignUpComponent = ({navigation, route}: SignUpProps) => {
                 <KeyboardAwareScrollView
                     enableOnAndroid={true}
                     scrollEnabled={true}
-                    contentContainerStyle={[commonStyles.keyboardScrollViewContainer, Platform.OS === 'android' ? {height: Dimensions.get("window").height + androidScrollPadding}: {flex : 1}]}>
+                    contentContainerStyle={[commonStyles.keyboardScrollViewContainer, Platform.OS === 'android' ? {height: Dimensions.get("window").height + androidScrollPadding}: {flex : 1}]}
+                    keyboardShouldPersistTaps={'handled'}
+                >
                     <View style={{flex: 1}}>
                         <View style={[{alignSelf: 'center'}, Platform.OS === 'android' && {marginTop: '15%'}]}>
                             <Text style={styles.signupTitle}>Welcome</Text>

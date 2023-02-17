@@ -46,7 +46,9 @@ export const Home = ({route}: HomeTabProps) => {
                 enableOnAndroid={true}
                 scrollEnabled={true}
                 persistentScrollbar={false}
-                showsHorizontalScrollIndicator={false}>
+                showsHorizontalScrollIndicator={false}
+                keyboardShouldPersistTaps={'handled'}
+            >
                 <View style={styles.topBarView}>
                     <ImageBackground
                         style={commonStyles.image}
