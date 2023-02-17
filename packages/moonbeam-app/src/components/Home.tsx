@@ -79,7 +79,7 @@ export const Home = ({route}: HomeTabProps) => {
                                         return (
                                             <View>
                                                 <View style={styles.dashboardBalanceTopView}>
-                                                    <Text style={styles.balanceDashboardTitle}>Balance</Text>
+                                                    <Text style={styles.balanceDashboardTitle}>Credit</Text>
                                                     <Text
                                                         style={styles.balanceDashboardBalanceTotal}>${creditBalance}</Text>
                                                 </View>
