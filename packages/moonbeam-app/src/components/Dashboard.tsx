@@ -11,10 +11,8 @@ import {Settings} from "./Settings";
 /**
  * Dashboard component.
  */
-export const Dashboard = ({navigation, route}: DashboardProps) => {
+export const Dashboard = ({}: DashboardProps) => {
     // state driven key-value pairs for UI related elements
-
-    // state driven key-value pairs for any specific data values
 
     // create a native bottom navigator, to be used for our bottom bar navigation
     const DashboardTab = createMaterialBottomTabNavigator<BottomBarStackParamList>();
@@ -42,9 +40,19 @@ export const Dashboard = ({navigation, route}: DashboardProps) => {
                     }
                 })}
             >
-                <DashboardTab.Screen name="Home" component={Home}/>
-                <DashboardTab.Screen name="Membership" component={Membership}/>
-                <DashboardTab.Screen name="Settings" component={Settings}/>
+                <DashboardTab.Screen name="Home"
+                                     key={"Home"}
+                                     navigationKey={"Home"}
+                                     component={Home}
+                                     initialParams={{pointValueRedeemed: 0}}/>
+                <DashboardTab.Screen name="Membership"
+                                     key={"Membership"}
+                                     navigationKey={"Membership"}
+                                     component={Membership}/>
+                <DashboardTab.Screen name="Settings"
+                                     key={"Settings"}
+                                     navigationKey={"Settings"}
+                                     component={Settings}/>
             </DashboardTab.Navigator>
         </NavigationContainer>
     );

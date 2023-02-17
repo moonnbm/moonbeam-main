@@ -2,22 +2,43 @@ import {Dimensions, Image, ImageBackground, SafeAreaView, ScrollView, Text, View
 import {KeyboardAwareScrollView} from 'react-native-keyboard-aware-scroll-view';
 import {HomeTabProps} from '../models/BottomBarProps';
 import {styles} from "../styles/home.module";
-import React, {useState} from 'react';
+import React, {useEffect, useMemo, useState} from 'react';
 // @ts-ignore
 import HomeDashboardLogo from '../../assets/login-logo.png';
 import {Divider, IconButton, List, SegmentedButtons} from 'react-native-paper';
 import * as Progress from 'react-native-progress';
 import {Avatar} from '@rneui/themed';
 import {commonStyles} from '../styles/common.module';
+import {Auth} from "aws-amplify";
 
 /**
  * Home component.
  */
-export const Home = ({navigation, route}: HomeTabProps) => {
+export const Home = ({route}: HomeTabProps) => {
     // state driven key-value pairs for UI related elements
     const [segmentedValue, setSegmentedValue] = useState<string>('transactions');
+    const [currentUserTitle, setCurrentUserTitle] = useState<string>("N/A");
 
     // state driven key-value pairs for any specific data values
+    const creditBalance = useMemo(() => Math.floor(Math.random() * (5000 - 2500 + 1) + 2500), []);
+    const availableBalance = useMemo(() => Math.floor(Math.random() * creditBalance), [creditBalance]);
+    const dashboardCircleProgress = useMemo(() => Math.round(availableBalance / creditBalance * 100) / 100, [creditBalance, availableBalance]);
+
+    /**
+     * Entrypoint UseEffect will be used as a block of code where we perform specific tasks (such as
+     * auth-related functionality for example), as well as any afferent API calls.
+     *
+     * Generally speaking, any functionality imperative prior to the full page-load should be
+     * included in here.
+     */
+    useEffect(() => {
+        Auth.currentUserInfo().then((userInfo) => {
+            const secondInitial = userInfo.attributes["name"].split(" ").length > 2 ? 2 : 1;
+            setCurrentUserTitle(`${Array.from(userInfo.attributes["name"].split(" ")[0])[0] as string}${Array.from(userInfo.attributes["name"].split(" ")[secondInitial])[0] as string}`);
+        });
+
+
+    },[route]);
 
     return (
         <SafeAreaView style={[commonStyles.rowContainer, commonStyles.androidSafeArea]}>
@@ -39,7 +60,7 @@ export const Home = ({navigation, route}: HomeTabProps) => {
                                 <Avatar
                                     size={38}
                                     rounded
-                                    title="MA"
+                                    title={currentUserTitle}
                                     containerStyle={{backgroundColor: 'grey'}}
                                 >
                                     <Avatar.Accessory onPress={() => console.log("PRESSSEd")} size={12}/>
@@ -47,10 +68,11 @@ export const Home = ({navigation, route}: HomeTabProps) => {
                             </View>
                             <View style={styles.dashboardColumnItemMiddle}>
                                 <Progress.Circle
+                                    direction={"counter-clockwise"}
                                     size={Dimensions.get('window').width / 1.75}
                                     strokeCap={"butt"}
                                     thickness={Dimensions.get('window').width / 40}
-                                    progress={0.5}
+                                    progress={dashboardCircleProgress}
                                     color={"#2A3779"}
                                     showsText={true}
                                     formatText={() => {
@@ -58,14 +80,17 @@ export const Home = ({navigation, route}: HomeTabProps) => {
                                             <View>
                                                 <View style={styles.dashboardBalanceTopView}>
                                                     <Text style={styles.balanceDashboardTitle}>Balance</Text>
-                                                    <Text style={styles.balanceDashboardBalanceTotal}>$2500</Text>
+                                                    <Text
+                                                        style={styles.balanceDashboardBalanceTotal}>${creditBalance}</Text>
                                                 </View>
                                                 <View>
                                                     <Image source={HomeDashboardLogo} style={styles.homeDashboardLogo}/>
                                                 </View>
                                                 <View>
-                                                    <Text style={styles.balanceDashboardBalanceAvailable}>$2500 <Text
-                                                        style={styles.balanceDashboardBalanceAvailableText}>Available</Text></Text>
+                                                    <Text
+                                                        style={styles.balanceDashboardBalanceAvailable}>${availableBalance + route.params.pointValueRedeemed}
+                                                        <Text
+                                                            style={styles.balanceDashboardBalanceAvailableText}>Available</Text></Text>
                                                 </View>
                                             </View>
                                         )
@@ -158,7 +183,7 @@ export const Home = ({navigation, route}: HomeTabProps) => {
                                         <View style={styles.topListItemRightView}>
                                             <View style={styles.topPriceView}>
                                                 <Text style={styles.listItemPrice}>$295.50</Text>
-                                                <Text style={styles.listItemDiscount}>3X | 25%</Text>
+                                                <Text style={styles.listItemDiscount}>1X | 10%</Text>
                                             </View>
                                             <View style={styles.listItemIcon}>
                                                 <List.Icon color={'#2A3779'} icon="chevron-right"/>
@@ -172,14 +197,14 @@ export const Home = ({navigation, route}: HomeTabProps) => {
                                     descriptionStyle={styles.dashboardItemDescription}
                                     titleNumberOfLines={2}
                                     descriptionNumberOfLines={2}
-                                    title="Oakley"
-                                    description='Phoenix, AZ - 8m ago'
+                                    title="Walgreens"
+                                    description='Peoria, AZ - 1d ago'
                                     left={() => <List.Icon color={'#2A3779'} icon="store"/>}
                                     right={() =>
                                         <View style={styles.topListItemRightView}>
                                             <View style={styles.topPriceView}>
-                                                <Text style={styles.listItemPrice}>$295.50</Text>
-                                                <Text style={styles.listItemDiscount}>3X | 25%</Text>
+                                                <Text style={styles.listItemPrice}>$32.01</Text>
+                                                <Text style={styles.listItemDiscount}>1X | 0%</Text>
                                             </View>
                                             <View style={styles.listItemIcon}>
                                                 <List.Icon color={'#2A3779'} icon="chevron-right"/>
@@ -193,14 +218,14 @@ export const Home = ({navigation, route}: HomeTabProps) => {
                                     descriptionStyle={styles.dashboardItemDescription}
                                     titleNumberOfLines={2}
                                     descriptionNumberOfLines={2}
-                                    title="Oakley"
-                                    description='Phoenix, AZ - 8m ago'
+                                    title="Samsung"
+                                    description='Austin, TX - 3d ago'
                                     left={() => <List.Icon color={'#2A3779'} icon="store"/>}
                                     right={() =>
                                         <View style={styles.topListItemRightView}>
                                             <View style={styles.topPriceView}>
-                                                <Text style={styles.listItemPrice}>$295.50</Text>
-                                                <Text style={styles.listItemDiscount}>3X | 25%</Text>
+                                                <Text style={styles.listItemPrice}>$1022.99</Text>
+                                                <Text style={styles.listItemDiscount}>1X | 10%</Text>
                                             </View>
                                             <View style={styles.listItemIcon}>
                                                 <List.Icon color={'#2A3779'} icon="chevron-right"/>
@@ -214,14 +239,14 @@ export const Home = ({navigation, route}: HomeTabProps) => {
                                     descriptionStyle={styles.dashboardItemDescription}
                                     titleNumberOfLines={2}
                                     descriptionNumberOfLines={2}
-                                    title="Oakley"
-                                    description='Phoenix, AZ - 8m ago'
+                                    title="Nike"
+                                    description='Austin, TX - 1w ago'
                                     left={() => <List.Icon color={'#2A3779'} icon="store"/>}
                                     right={() =>
                                         <View style={styles.topListItemRightView}>
                                             <View style={styles.topPriceView}>
-                                                <Text style={styles.listItemPrice}>$295.50</Text>
-                                                <Text style={styles.listItemDiscount}>3X | 25%</Text>
+                                                <Text style={styles.listItemPrice}>$192.00</Text>
+                                                <Text style={styles.listItemDiscount}>3X | 20%</Text>
                                             </View>
                                             <View style={styles.listItemIcon}>
                                                 <List.Icon color={'#2A3779'} icon="chevron-right"/>

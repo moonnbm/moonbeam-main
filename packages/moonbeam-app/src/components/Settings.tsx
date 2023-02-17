@@ -10,7 +10,7 @@ import React from "react";
 /**
  * Settings component.
  */
-export const Settings = ({navigation, route}: SettingsTabProps) => {
+export const Settings = ({}: SettingsTabProps) => {
     // state driven key-value pairs for UI related elements
 
     // state driven key-value pairs for any specific data values

@@ -1,5 +1,4 @@
-import {Avatar} from '@rneui/base';
-import React from 'react';
+import React, {useMemo, useState} from 'react';
 import {Dimensions, Image, ImageBackground, SafeAreaView, ScrollView, View} from 'react-native';
 import {KeyboardAwareScrollView} from 'react-native-keyboard-aware-scroll-view';
 import {MemerbshipTabProps} from '../models/BottomBarProps';
@@ -12,14 +11,29 @@ import WelcomeOffer from '../../assets/welcome-offer.png';
 // @ts-ignore
 import FriendReferral from '../../assets/refer-friend.png';
 import {Button, Card, Divider, Text} from 'react-native-paper';
+import {CommonActions} from "@react-navigation/native";
 
 /**
  * Membership component.
  */
 export const Membership = ({navigation, route}: MemerbshipTabProps) => {
     // state driven key-value pairs for UI related elements
+    const [pointsRedeemable, setPointsRedeemable] = useState<boolean>(true);
 
     // state driven key-value pairs for any specific data values
+    const [pointsEarned, setPointsEarned] =  useState<number>(useMemo(() => Math.floor(Math.random() * (50000 - 10000 + 1) + 10000), []));
+
+    /**
+     * Function used to redeem points, as cashback balance for the prototype.
+     */
+    const redeemPoints = () => {
+        navigation.dispatch({
+            ...CommonActions.setParams({ pointValueRedeemed: Math.round(pointsEarned * 0.005 * 10) / 10 }),
+            source: navigation.getState().routes[0].key
+        });
+        setPointsEarned(0);
+        setPointsRedeemable(false);
+    }
 
     return (
         <SafeAreaView style={[commonStyles.rowContainer, commonStyles.androidSafeArea]}>
@@ -61,8 +75,9 @@ export const Membership = ({navigation, route}: MemerbshipTabProps) => {
                                         width: Dimensions.get('window').width / 15
                                     }]}/>
                                     <Text variant="bodyMedium"
-                                          style={[styles.cardBodyPointsContent, {fontSize: Dimensions.get('window').height / 30}]}>10,
-                                        500</Text>
+                                          style={[styles.cardBodyPointsContent, {fontSize: Dimensions.get('window').height / 30}]}>
+                                        {pointsEarned.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")}
+                                    </Text>
                                 </View>
                                 <Divider
                                     style={[commonStyles.divider, {
@@ -70,8 +85,8 @@ export const Membership = ({navigation, route}: MemerbshipTabProps) => {
                                         width: Dimensions.get('window').width / 1.4
                                     }]}/>
                                 <Button
-                                    onPress={() => {
-                                    }}
+                                    disabled={!pointsRedeemable}
+                                    onPress={() => {redeemPoints()}}
                                     style={[styles.redeemButton, {
                                         height: Dimensions.get('window').height / 20,
                                         width: Dimensions.get('window').width / 3
@@ -91,7 +106,8 @@ export const Membership = ({navigation, route}: MemerbshipTabProps) => {
 
                     <Text style={[styles.rewardOffersTitle, {fontSize: Dimensions.get('window').width / 15}]}>Current
                         Reward Offers</Text>
-                    <ScrollView style={{height: Dimensions.get('window').height/2}} horizontal={true} scrollEnabled={true}
+                    <ScrollView style={{height: Dimensions.get('window').height / 2}} horizontal={true}
+                                scrollEnabled={true}
                                 persistentScrollbar={false} showsHorizontalScrollIndicator={false}>
                         <Card style={[styles.cardStyleOffers, {
                             width: Dimensions.get('window').width / 1.8,
@@ -111,7 +127,12 @@ export const Membership = ({navigation, route}: MemerbshipTabProps) => {
                                     <Text variant="titleLarge" style={styles.pointsTitle}>Points</Text>
                                 </View>
                             </Card.Content>
-                            <Card.Cover source={WelcomeOffer} style={{alignSelf: 'center', width: Dimensions.get('window').width / 3, height: Dimensions.get('window').height / 7, backgroundColor: 'transparent'}} />
+                            <Card.Cover source={WelcomeOffer} style={{
+                                alignSelf: 'center',
+                                width: Dimensions.get('window').width / 3,
+                                height: Dimensions.get('window').height / 7,
+                                backgroundColor: 'transparent'
+                            }}/>
                             <Button
                                 disabled={true}
                                 onPress={() => {
@@ -145,7 +166,12 @@ export const Membership = ({navigation, route}: MemerbshipTabProps) => {
                                     <Text variant="titleLarge" style={styles.pointsTitle}>Points</Text>
                                 </View>
                             </Card.Content>
-                            <Card.Cover source={FriendReferral} style={{alignSelf: 'center', width: Dimensions.get('window').width / 3, height: Dimensions.get('window').height / 7, backgroundColor: 'transparent'}} />
+                            <Card.Cover source={FriendReferral} style={{
+                                alignSelf: 'center',
+                                width: Dimensions.get('window').width / 3,
+                                height: Dimensions.get('window').height / 7,
+                                backgroundColor: 'transparent'
+                            }}/>
                             <Button
                                 disabled={false}
                                 onPress={() => {

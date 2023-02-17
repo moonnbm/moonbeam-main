@@ -33,6 +33,7 @@ export const styles = StyleSheet.create({
     },
     dashboardColumnItemMiddle: {
         flex: 1,
+        zIndex: 1,
         marginBottom: '12%',
         justifyContent: 'center',
         alignItems: 'center',
