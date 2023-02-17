@@ -41,16 +41,7 @@ export const Membership = ({navigation, route}: MemerbshipTabProps) => {
                                     Membership
                                 </Text>
                             </View>
-                            <View style={styles.dashboardColumnItemLast}>
-                                <Avatar
-                                    size={30}
-                                    rounded
-                                    title="MA"
-                                    containerStyle={{backgroundColor: 'grey'}}
-                                >
-                                    <Avatar.Accessory onPress={() => console.log("PRESSSEd")} size={10}/>
-                                </Avatar>
-                            </View>
+                            <View style={styles.dashboardColumnItemLast}></View>
                         </View>
                     </ImageBackground>
                 </View>
@@ -94,6 +85,7 @@ export const Membership = ({navigation, route}: MemerbshipTabProps) => {
                             </View>
                         </Card.Content>
                     </Card>
+
                     <Divider
                         style={[commonStyles.divider, {marginTop: '10%', width: Dimensions.get('window').width / 2}]}/>
 

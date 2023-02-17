@@ -6,6 +6,7 @@ import {NavigationContainer} from '@react-navigation/native';
 import Ionicons from '@expo/vector-icons/Ionicons';
 import {Home} from './Home';
 import {Membership} from './Membership';
+import {Settings} from "./Settings";
 
 /**
  * Dashboard component.
@@ -43,9 +44,7 @@ export const Dashboard = ({navigation, route}: DashboardProps) => {
             >
                 <DashboardTab.Screen name="Home" component={Home}/>
                 <DashboardTab.Screen name="Membership" component={Membership}/>
-                <DashboardTab.Screen name="Settings" component={() => {
-                    return (<></>)
-                }}/>
+                <DashboardTab.Screen name="Settings" component={Settings}/>
             </DashboardTab.Navigator>
         </NavigationContainer>
     );

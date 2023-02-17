@@ -39,10 +39,8 @@ export const styles = StyleSheet.create({
         textAlign: 'center'
     },
     dashboardColumnItemLast: {
+        height: 50,
         flex: 1,
-        marginBottom: '2%',
-        marginRight: '5%',
-        marginTop: '2%',
         justifyContent: 'center',
         alignItems: 'flex-end',
         alignSelf: 'flex-end',
