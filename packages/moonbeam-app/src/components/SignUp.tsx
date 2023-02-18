@@ -360,6 +360,7 @@ export const SignUpComponent = ({navigation, route}: SignUpProps) => {
                        contentContainerStyle={styles.modalContainer}>
                     <Text style={styles.modalParagraph}>{modalError}</Text>
                     <Button
+                        uppercase={false}
                         style={styles.modalButton}
                         icon={'redo-variant'}
                         textColor={"red"}
@@ -692,6 +693,7 @@ export const SignUpComponent = ({navigation, route}: SignUpProps) => {
                         (registerButtonShown) &&
                         <View style={styles.signUpView}>
                             <Button
+                                uppercase={false}
                                 style={styles.signUpFooterButton}
                                 textColor={"#f2f2f2"}
                                 buttonColor={"#2A3779"}

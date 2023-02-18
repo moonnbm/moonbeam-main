@@ -64,6 +64,7 @@ export const Settings = ({}: SettingsTabProps) => {
                                 </View>
                             </Card.Content>
                             <Button
+                                uppercase={false}
                                 onPress={() => {
                                 }}
                                 style={[{

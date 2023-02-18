@@ -10,6 +10,7 @@
       "image": "./assets/splash.png",
       "resizeMode": "cover"
     },
+    "scheme": "moonbeam",
     "updates": {
       "fallbackToCacheTimeout": 0
     },

@@ -1,7 +1,7 @@
 import React, {useMemo, useState} from 'react';
 import {Dimensions, Image, ImageBackground, SafeAreaView, ScrollView, View} from 'react-native';
 import {KeyboardAwareScrollView} from 'react-native-keyboard-aware-scroll-view';
-import {MemerbshipTabProps} from '../models/BottomBarProps';
+import {MembershipTabProps} from '../models/BottomBarProps';
 import {commonStyles} from '../styles/common.module';
 import {styles} from '../styles/membership.module';
 // @ts-ignore
@@ -16,7 +16,7 @@ import {CommonActions} from "@react-navigation/native";
 /**
  * Membership component.
  */
-export const Membership = ({navigation}: MemerbshipTabProps) => {
+export const Membership = ({navigation}: MembershipTabProps) => {
     // state driven key-value pairs for UI related elements
     const [pointsRedeemable, setPointsRedeemable] = useState<boolean>(true);
 
@@ -27,6 +27,7 @@ export const Membership = ({navigation}: MemerbshipTabProps) => {
      * Function used to redeem points, as cashback balance for the prototype.
      */
     const redeemPoints = () => {
+        // dispatch a navigation event, which will update the home props for the points value redeemed
         navigation.dispatch({
             ...CommonActions.setParams({ pointValueRedeemed: Math.round(pointsEarned * 0.005 * 10) / 10 }),
             source: navigation.getState().routes[0].key
@@ -87,6 +88,7 @@ export const Membership = ({navigation}: MemerbshipTabProps) => {
                                         width: Dimensions.get('window').width / 1.4
                                     }]}/>
                                 <Button
+                                    uppercase={false}
                                     disabled={!pointsRedeemable}
                                     onPress={() => {redeemPoints()}}
                                     style={[styles.redeemButton, {
@@ -136,6 +138,7 @@ export const Membership = ({navigation}: MemerbshipTabProps) => {
                                 backgroundColor: 'transparent'
                             }}/>
                             <Button
+                                uppercase={false}
                                 disabled={true}
                                 onPress={() => {
                                 }}
@@ -175,6 +178,7 @@ export const Membership = ({navigation}: MemerbshipTabProps) => {
                                 backgroundColor: 'transparent'
                             }}/>
                             <Button
+                                uppercase={false}
                                 disabled={false}
                                 onPress={() => {
                                 }}

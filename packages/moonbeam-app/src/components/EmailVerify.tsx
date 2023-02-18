@@ -129,6 +129,7 @@ export const EmailVerify = ({navigation, route}: EmailVerifyProps) => {
                        contentContainerStyle={[styles.modalContainer, isErrorModal ? {borderColor: 'red'} : {borderColor: 'green'}]}>
                     <Text style={styles.modalParagraph}>{modalMessage}</Text>
                     <Button
+                        uppercase={false}
                         style={[styles.modalButton, isErrorModal ? {borderColor: 'red'} : {borderColor: 'green'}]}
                         {...!isErrorModal && {
                             textColor: 'green',
@@ -187,6 +188,7 @@ export const EmailVerify = ({navigation, route}: EmailVerifyProps) => {
                         <Text style={styles.errorMessage}>{codeErrors[0]}</Text> : <></>}
 
                     <Button
+                        uppercase={false}
                         onPress={() => {
                             if (code === "") {
                                 setProfileCodeVerificationMainError(true);
@@ -206,6 +208,7 @@ export const EmailVerify = ({navigation, route}: EmailVerifyProps) => {
                         Confirm
                     </Button>
                     <Button
+                        uppercase={false}
                         onPress={() => onResendCodePressed()}
                         style={styles.resendCodeButton}
                         textColor={"#f2f2f2"}

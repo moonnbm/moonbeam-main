@@ -230,6 +230,7 @@ export const ForgotPassword = ({navigation, route}: ForgotPasswordProps) => {
                        contentContainerStyle={[styles.modalContainer, isErrorModal ? {borderColor: 'red'} : {borderColor: 'green'}]}>
                     <Text style={styles.modalParagraph}>{modalMessage}</Text>
                     <Button
+                        uppercase={false}
                         style={[styles.modalButton, isErrorModal ? {borderColor: 'red'} : {borderColor: 'green'}]}
                         {...!isErrorModal && {
                             textColor: 'green',
@@ -439,6 +440,7 @@ export const ForgotPassword = ({navigation, route}: ForgotPasswordProps) => {
                         <View style={[styles.bottomView, resetPasswordDisclaimerShown ? {marginTop: '-5%'} : {marginTop: `-${Dimensions.get('window').height/50}%`}]}>
                             {resetPasswordDisclaimerShown &&
                                 <Button
+                                    uppercase={false}
                                     style={styles.resetPasswordButton}
                                     textColor={"#f2f2f2"}
                                     buttonColor={"#2A3779"}

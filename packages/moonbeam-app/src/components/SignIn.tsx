@@ -198,6 +198,7 @@ export const SignInComponent = ({navigation, route}: SignInProps) => {
                         </Text>
                     </View>
                     <Button
+                        uppercase={false}
                         onPress={async () => {
                             if (email === "" || password === "") {
                                 setLoginMainError(true);

@@ -5,7 +5,7 @@ import * as SplashScreen from 'expo-splash-screen';
 import {SignInComponent} from './src/components/SignIn'
 import {SignUpComponent} from './src/components/SignUp'
 import * as Font from 'expo-font';
-import {Provider as PaperProvider} from 'react-native-paper';
+import {Provider as PaperProvider, Text} from 'react-native-paper';
 import {theme} from './src/utils/Theme';
 import {NavigationContainer} from '@react-navigation/native';
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
@@ -14,6 +14,7 @@ import { EmailVerify } from './src/components/EmailVerify';
 import { ForgotPassword } from './src/components/ForgotPassword';
 import { Dashboard } from './src/components/Dashboard';
 import {Logs} from "expo";
+import * as Linking from 'expo-linking';
 
 // keep the splash screen visible while we fetch resources
 SplashScreen.preventAutoHideAsync();
@@ -90,10 +91,29 @@ export default function App() {
         // create a native stack navigator, to be used for our root application navigation
         const Stack = createNativeStackNavigator<RootStackParamList>();
 
+        // enabling the linking configuration for creating links to the application screens, based on the navigator
+        const linkingConfig = {
+            screens: {
+                SignIn: 'singin',
+                SignUp: 'signup'
+            },
+        };
+
+        /**
+         * configuring the navigation linking, based on the types of prefixes that the application supports, given
+         * the environment that we deployed the application in.
+         * @see https://docs.expo.dev/guides/linking/?redirected
+         * @see https://reactnavigation.org/docs/deep-linking/
+         */
+        const linking = {
+            prefixes: [Linking.createURL('/')],
+            linkingConfig,
+        };
+
         // return the component for the application
         return (
             <PaperProvider theme={theme}>
-                <NavigationContainer>
+                <NavigationContainer linking={linking} fallback={<Text>Loading...</Text>}>
                     <Stack.Navigator>
                         <Stack.Screen
                             name="SignIn"
